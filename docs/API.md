@@ -4,25 +4,9 @@
 
 
 
-The list of available methods for this plugin is described below.
+Coming Soon!
 
-
-| method name| params| description|
-| ----------- |-----------------------------|--------------|
-| [afStart](#afStart) | (String key, boolean isDebug)  | Initialize the SDK|
-| [afSetCustomerUserId](#afSetCustomerUserId) | (String id) | Set Custom User ID |
-| [afTrackAppLaunch](#afTrackAppLaunch) | () | Send a launch |
-| [afTrackEvent](#afTrackEvent) | (String eventName, Map<String, Object> eventValues) | Track rich in-app events |
-
----
-
-##### <a id="afStart"> **`afStart: void`**
-
-##### <a id="afSetCustomerUserId"> **`afSetCustomerUserId(String id): void`** 
-
-##### <a id="afTrackAppLaunch"> **`afTrackAppLaunch(): void`** 
-
-##### <a id="afTrackEvent"> **`afTrackEvent(String eventName, Map<String, Object> eventValues): void`** 
+For now check out the guides [here](./Guides.md).
 
 
 ---
