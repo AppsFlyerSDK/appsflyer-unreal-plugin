@@ -8,7 +8,7 @@
 
 #import "UE4AFSDKDelegate.h"
 
-#ifndef PLATFORM_IOS
+
 
 @implementation UE4AFSDKDelegate
 
@@ -55,4 +55,3 @@
 
 @end
 
-#endif

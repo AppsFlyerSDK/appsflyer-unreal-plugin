@@ -36,7 +36,8 @@ public class AppsFlyerSDK : ModuleRules
 				"iAd",
 				"CoreTelephony",
 				"Security",
-				"SystemConfiguration"
+				"SystemConfiguration",
+				"CFNetwork"
 			}
 			);
 			break;
