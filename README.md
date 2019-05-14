@@ -28,8 +28,7 @@
 * Copy the AppsFlyer folder into it. You should have something like
 ```
   MyProject
-  ├── Content
-      └── Plugins
+  ├── Plugins
           └── AppsFlyerSDK
               └── AppsFlyerSDK.uplugin
 ```
