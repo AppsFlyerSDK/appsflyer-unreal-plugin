@@ -1,0 +1,46 @@
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+    <buildGradleAdditions>
+        <insert>
+            dependencies {
+                implementation 'com.android.installreferrer:installreferrer:1.0'
+                implementation 'com.appsflyer:af-android-sdk:4.9.0'
+            }
+        </insert>
+    </buildGradleAdditions>
+    <androidManifestUpdates>
+        <addPermission android:name="android.permission.INTERNET" />
+        <addPermission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    </androidManifestUpdates>
+    <gameActivityImportAdditions>
+        <insert>
+            import android.app.Application;
+            import com.appsflyer.*;
+        </insert>
+    </gameActivityImportAdditions>
+    <gameActivityClassAdditions>
+        <insert>
+            private String afKey;
+
+            public void afStart(String key, boolean isDebug) {
+                afKey = key;
+                AppsFlyerLib appsflyer = AppsFlyerLib.getInstance();
+                appsflyer.setDebugLog(isDebug);
+                appsflyer.init(key, new AppsFlyer2dXConversionCallback(), this)
+                        .startTracking((Application) getApplicationContext());
+                appsflyer.trackAppLaunch(this, key);
+            }
+
+            public void afSetCustomerUserId(String id) {
+                AppsFlyerLib.getInstance().setCustomerUserId(id);
+            }
+
+            public void afTrackAppLaunch() {
+                AppsFlyerLib.getInstance().trackAppLaunch(this, afKey);
+            }
+
+            public void afTrackEvent(String eventName, Map&lt;String, Object&gt; eventValues) {
+                AppsFlyerLib.getInstance().trackEvent(this, eventName, eventValues);
+            }
+        </insert>
+    </gameActivityClassAdditions>
+</root>
