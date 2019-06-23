@@ -20,6 +20,7 @@
 
 - iOS AppsFlyerSDK **v4.9.0**
 - Android AppsFlyerSDK **v4.9.0**
+- Unreal Engine **v4.1**
 
 
 ## <a id="installation">📲Installation
