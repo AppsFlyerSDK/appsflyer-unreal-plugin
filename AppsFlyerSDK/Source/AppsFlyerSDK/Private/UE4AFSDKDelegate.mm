@@ -6,6 +6,7 @@
 //  Copyright © 2019 Epic Games, Inc. All rights reserved.
 //
 
+#if PLATFORM_IOS
 #import "UE4AFSDKDelegate.h"
 
 
@@ -54,4 +55,8 @@
 }
 
 @end
-
+#elif PLATFORM_ANDROID
+    
+    
+    
+#endif
