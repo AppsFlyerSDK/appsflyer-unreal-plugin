@@ -6,7 +6,10 @@
 //  Copyright © 2019 Epic Games, Inc. All rights reserved.
 //
 
+#ifndef PLATFORM_IOS 
+#else
 #if PLATFORM_IOS
+
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -21,7 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
-#elif PLATFORM_ANDROID
-  
-#endif
 
+#endif
+#endif
