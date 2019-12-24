@@ -18,38 +18,36 @@ public class AppsFlyerSDK : ModuleRules
 
 		PublicDependencyModuleNames.AddRange(new string[] { "Engine", "Core", "CoreUObject" });
 		PrivateIncludePathModuleNames.AddRange(new string[] { "Settings" });
+        
+        if (Target.Platform == UnrealTargetPlatform.IOS)
+        {
+                PublicAdditionalFrameworks.Add(
+                new Framework(
+                    "AppsFlyerLib",
+                    "../ThirdParty/iOS/AppsFlyerLib.embeddedframework.zip"
+                )
+            );
 
-		switch (Target.Platform)
-		{
-		case UnrealTargetPlatform.IOS:
-			PublicAdditionalFrameworks.Add(
-			    new UEBuildFramework(
-			        "AppsFlyerLib",
-			        "../ThirdParty/iOS/AppsFlyerLib.embeddedframework.zip"
-			    )
-			);
-
-			PublicFrameworks.AddRange(
-			    new string[]
-			{
-				"AdSupport",
-				"iAd",
-				"CoreTelephony",
-				"Security",
-				"SystemConfiguration",
-				"CFNetwork"
-			}
-			);
-			break;
-
-		case UnrealTargetPlatform.Android:
-			// Unreal Plugin Language
-			string PluginPath = Utils.MakePathRelativeTo(ModuleDirectory, Target.RelativeEnginePath);
-			AdditionalPropertiesForReceipt.Add("AndroidPlugin", System.IO.Path.Combine(PluginPath, "AppsFlyer_UPL.xml"));
-			// JNI
-			PublicIncludePathModuleNames.Add("Launch");
-			break;
-		}
+                PublicFrameworks.AddRange(
+                    new string[]
+                {
+                "AdSupport",
+                "iAd",
+                "CoreTelephony",
+                "Security",
+                "SystemConfiguration",
+                "CFNetwork"
+                }
+                );
+        }
+        else if (Target.Platform == UnrealTargetPlatform.Android)
+        {
+                // Unreal Plugin Language
+                string PluginPath = Utils.MakePathRelativeTo(ModuleDirectory, Target.RelativeEnginePath);
+                AdditionalPropertiesForReceipt.Add("AndroidPlugin", System.IO.Path.Combine(PluginPath, "AppsFlyer_UPL.xml"));
+                // JNI
+                PublicIncludePathModuleNames.Add("Launch");
+        }
 	}
 }
 }
