@@ -42,6 +42,8 @@ For more on in-app events check out the AppsFlyer **Knowledge base** [here](http
     
 Setting your own Custom ID enables you to cross-reference your own unique ID with AppsFlyer’s user ID and the other devices’ IDs. This ID is available in AppsFlyer CSV reports along with postbacks APIs for cross-referencing with you internal IDs.
 
+**IMPORTANT**: If you want to have CUID in the install record, you need to set it before SDK send out first launch. If implemented as per screenshot above it will happen before the launch is sent. For more details please check out this articles: [iOS](https://support.appsflyer.com/hc/en-us/articles/207032066-iOS-SDK-integration-for-developers#additional-apis) and [Android](https://support.appsflyer.com/hc/en-us/articles/207032126-Android-SDK-integration-for-developers#additional-apis-set-customer-user-id).
+
 <img src="./ScreenShots/CustomUserId.png"  width="1100">
 
 
