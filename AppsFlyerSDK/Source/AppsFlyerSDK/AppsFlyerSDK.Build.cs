@@ -47,7 +47,6 @@ public class AppsFlyerSDK : ModuleRules
 			AdditionalPropertiesForReceipt.Add("AndroidPlugin", System.IO.Path.Combine(PluginPath, "AppsFlyer_UPL.xml"));
 			// JNI
 			PublicIncludePathModuleNames.Add("Launch");
-			break;
 		}
 	}
 }
