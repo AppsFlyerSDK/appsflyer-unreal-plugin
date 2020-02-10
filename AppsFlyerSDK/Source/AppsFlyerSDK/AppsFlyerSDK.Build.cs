@@ -19,11 +19,10 @@ public class AppsFlyerSDK : ModuleRules
 		PublicDependencyModuleNames.AddRange(new string[] { "Engine", "Core", "CoreUObject" });
 		PrivateIncludePathModuleNames.AddRange(new string[] { "Settings" });
 
-		switch (Target.Platform)
+		if (Target.Platform == UnrealTargetPlatform.IOS)
 		{
-		case UnrealTargetPlatform.IOS:
 			PublicAdditionalFrameworks.Add(
-			    new UEBuildFramework(
+			    new Framework(
 			        "AppsFlyerLib",
 			        "../ThirdParty/iOS/AppsFlyerLib.embeddedframework.zip"
 			    )
@@ -40,9 +39,9 @@ public class AppsFlyerSDK : ModuleRules
 				"CFNetwork"
 			}
 			);
-			break;
-
-		case UnrealTargetPlatform.Android:
+		}
+		else if (Target.Platform == UnrealTargetPlatform.Android)
+		{
 			// Unreal Plugin Language
 			string PluginPath = Utils.MakePathRelativeTo(ModuleDirectory, Target.RelativeEnginePath);
 			AdditionalPropertiesForReceipt.Add("AndroidPlugin", System.IO.Path.Combine(PluginPath, "AppsFlyer_UPL.xml"));
