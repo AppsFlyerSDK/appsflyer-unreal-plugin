@@ -31,15 +31,15 @@
  `installData` contains information about install.
  Organic/non-organic, etc.
  */
-- (void)onConversionDataReceived:(NSDictionary *)installData {
-    _onConversionDataReceived(installData);
+- (void)onConversionDataSuccess:(NSDictionary *)conversionInfo {
+    _onConversionDataSuccess([UE4AFSDKDelegate dictionaryByReplacingNullsWithStrings:conversionInfo]);
 }
 
 /**
  Any errors that occurred during the conversion request.
  */
-- (void)onConversionDataRequestFailure:(NSError *)error {
-    _onConversionDataRequestFailure(error.localizedDescription);
+- (void)onConversionDataFail:(NSError *)error {
+    _onConversionDataFail(error.localizedDescription);
 }
 
 /**
@@ -54,6 +54,24 @@
  */
 - (void)onAppOpenAttributionFailure:(NSError *)error {
     _onAppOpenAttributionFailure(error.localizedDescription);
+}
+
++ (NSDictionary *)dictionaryByReplacingNullsWithStrings:(NSDictionary *)dict {
+   const NSMutableDictionary *replaced = [dict mutableCopy];
+   const id nul = [NSNull null];
+   const NSString *blank = @"";
+
+   for (NSString *key in dict) {
+      const id object = [dict objectForKey:key];
+      if (object == nul) {
+         // pointer comparison is way faster than -isKindOfClass:
+         // since [NSNull null] is a singleton, they'll all point to the same
+         // location in memory.
+         [replaced setObject:blank
+                      forKey:key];
+      }
+   }
+   return [replaced copy];
 }
 
 @end

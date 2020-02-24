@@ -16,9 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UE4AFSDKDelegate : NSObject
 
-@property (nonatomic) void (*onConversionDataReceived)(NSDictionary *installData);
+@property (nonatomic) void (*onConversionDataSuccess)(NSDictionary *conversionInfo);
 @property (nonatomic) void (*onAppOpenAttribution)(NSDictionary *attributionData);
-@property (nonatomic) void (*onConversionDataRequestFailure)(NSString *error);
+@property (nonatomic) void (*onConversionDataFail)(NSString *error);
 @property (nonatomic) void (*onAppOpenAttributionFailure)(NSString *error);
 
 @end

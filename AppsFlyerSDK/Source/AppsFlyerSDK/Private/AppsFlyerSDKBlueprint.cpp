@@ -14,9 +14,10 @@
 #elif PLATFORM_IOS
 #import <AppsFlyerLib/AppsFlyerTracker.h>
 #import "UE4AFSDKDelegate.h"
+#include "IOSAppDelegate.h"
 #endif
 DEFINE_LOG_CATEGORY(LogAppsFlyerSDKBlueprint);
-#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5f, FColor::White, TEXT(text), false)
+
 #if PLATFORM_ANDROID
 extern "C" {
     JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInstallConversionDataLoadedNative
@@ -34,9 +35,16 @@ extern "C" {
         for (int i = 0; i < arraySize; ++i) {
             jstring objKey = (jstring) env->GetObjectArrayElement(arrayOfKeys, i);
             const char* c_string_key = env->GetStringUTFChars(objKey, 0);
+            // Get method
             jmethodID midGet = env->GetMethodID(clsHashMap, "get", "(Ljava/lang/Object;)Ljava/lang/Object;");
-            jstring objValue = (jstring)env->CallObjectMethod(attributionObject, midGet, objKey);
-            const char* c_string_value = env->GetStringUTFChars(objValue, 0);
+            
+            jclass strCls = env->FindClass("java/lang/String");
+            jmethodID toStrMethod = env->GetStaticMethodID(strCls, "valueOf", "(Ljava/lang/Object;)Ljava/lang/String;");
+            
+            jobject objValue = env->CallObjectMethod(attributionObject, midGet, objKey);
+            jstring strValue = (jstring)env->CallStaticObjectMethod(strCls, toStrMethod, objValue);
+            
+            const char* c_string_value = env->GetStringUTFChars(strValue, 0);
             map.Add(c_string_key, c_string_value);
         }
         // Java map to UE4 map
@@ -60,7 +68,15 @@ extern "C" {
 }
 #elif PLATFORM_IOS
 @protocol AppsFlyerTrackerDelegate;
-static void onConversionDataReceived(NSDictionary *installData) {
+
+static void OnOpenURL(UIApplication *application, NSURL *url, NSString *sourceApplication, id annotation)
+{
+    dispatch_async(dispatch_get_main_queue(), ^ {
+        [[AppsFlyerTracker sharedTracker] handleOpenURL:url sourceApplication:sourceApplication withAnnotation:annotation];
+    });
+}
+
+static void onConversionDataSuccess(NSDictionary *installData) {
     TMap<FString, FString> map;
     FAppsFlyerConversionData conversionData;
     for (NSString * key in [installData allKeys]) {
@@ -74,7 +90,7 @@ static void onConversionDataReceived(NSDictionary *installData) {
         Itr->OnConversionDataReceived.Broadcast(conversionData);
     }
 }
-static void onConversionDataRequestFailure(NSString *error) {
+static void onConversionDataFail(NSString *error) {
     NSLog(@"%@", error);
 }
 static void onAppOpenAttribution(NSDictionary *attributionData) {
@@ -96,7 +112,9 @@ static void onAppOpenAttributionFailure(NSString *error) {
 }
 #endif
 UAppsFlyerSDKBlueprint::UAppsFlyerSDKBlueprint(const FObjectInitializer &ObjectInitializer) : Super(ObjectInitializer) {}
-void UAppsFlyerSDKBlueprint::configure() {
+
+void UAppsFlyerSDKBlueprint::configure()
+{
     const UAppsFlyerSDKSettings *defaultSettings = GetDefault<UAppsFlyerSDKSettings>();
     const bool isDebug = defaultSettings->bIsDebug; 
 #if PLATFORM_ANDROID
@@ -114,13 +132,15 @@ void UAppsFlyerSDKBlueprint::configure() {
             [AppsFlyerTracker sharedTracker].appsFlyerDevKey = defaultSettings->appsFlyerDevKey.GetNSString();
             [AppsFlyerTracker sharedTracker].appleAppID = defaultSettings->appleAppID.GetNSString();
             [AppsFlyerTracker sharedTracker].isDebug = isDebug;
+            FIOSCoreDelegates::OnOpenURL.AddStatic(&OnOpenURL);
             UE4AFSDKDelegate *delegate = [[UE4AFSDKDelegate alloc] init];
-            delegate.onConversionDataReceived = onConversionDataReceived;
-            delegate.onConversionDataRequestFailure = onConversionDataRequestFailure;
+            delegate.onConversionDataSuccess = onConversionDataSuccess;
+            delegate.onConversionDataFail = onConversionDataFail;
             delegate.onAppOpenAttribution = onAppOpenAttribution;
             delegate.onAppOpenAttributionFailure = onAppOpenAttributionFailure;
             [AppsFlyerTracker sharedTracker].delegate = (id<AppsFlyerTrackerDelegate>)delegate;
-            print("iOS AppsFlyerSDK configured and ready to serve");
+            UE_LOG(LogAppsFlyerSDKBlueprint, Display, TEXT("AppsFlyer: UE4 ready"));
+
             [[AppsFlyerTracker sharedTracker] trackAppLaunch];
             [[NSNotificationCenter defaultCenter] addObserverForName: UIApplicationWillEnterForegroundNotification
             object: nil
