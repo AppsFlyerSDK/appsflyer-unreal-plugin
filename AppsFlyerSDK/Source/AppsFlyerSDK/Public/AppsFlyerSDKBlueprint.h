@@ -26,4 +26,10 @@ class APPSFLYERSDK_API UAppsFlyerSDKBlueprint : public UBlueprintFunctionLibrary
 	 */
 	UFUNCTION(BlueprintCallable, Category = AppsFlyerSDK, DisplayName = "AppsFlyerSDK to set customer user id")
 	static void setCustomerUserId(FString customerUserId);
+
+	/*!
+	 * This method returns AppsFlyer's internal id(unique for app install)
+	 */
+	UFUNCTION(BlueprintCallable, Category = AppsFlyerSDK, DisplayName = "AppsFlyerSDK unique id")
+	static FString getAppsFlyerUID();
 };

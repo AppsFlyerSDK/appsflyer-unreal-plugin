@@ -209,3 +209,32 @@ void UAppsFlyerSDKBlueprint::trackTMapEvent(FString eventName, TMap <FString, FS
 #endif
     GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("trackEvent raised"));
 }
+
+FString UAppsFlyerSDKBlueprint::getAppsFlyerUID() {
+#if PLATFORM_ANDROID
+    FString ResultStr = "Undefined";
+    if (JNIEnv* Env = FAndroidApplication::GetJavaEnv())
+    {
+        jmethodID MethodId = FJavaWrapper::FindMethod(Env,
+                                FJavaWrapper::GameActivityClassID,
+                                "afGetAppsFlyerUID",
+                                "()Ljava/lang/String;", false);
+        jstring AppsFlyerUID = (jstring)FJavaWrapper::CallObjectMethod(Env, FJavaWrapper::GameActivityThis, MethodId);
+        const char* cAppsFlyerUID = Env->GetStringUTFChars(AppsFlyerUID, 0);
+
+        ResultStr = FString(cAppsFlyerUID);
+        Env->ReleaseStringUTFChars(AppsFlyerUID, cAppsFlyerUID);
+        Env->DeleteLocalRef(AppsFlyerUID);
+    }
+    return ResultStr;
+#elif PLATFORM_IOS
+    NSString *UID = [[AppsFlyerTracker sharedTracker] getAppsFlyerUID];
+    FString ueUID(UID);
+    return ueUID;
+#else
+    return FString(TEXT("Wrong platform!"));
+#endif
+}
+
+
+

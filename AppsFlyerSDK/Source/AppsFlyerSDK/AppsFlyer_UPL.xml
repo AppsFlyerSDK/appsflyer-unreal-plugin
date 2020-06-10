@@ -46,6 +46,10 @@
             public void afTrackEvent(String eventName, Map&lt;String, Object&gt; eventValues) {
                 AppsFlyerLib.getInstance().trackEvent(this, eventName, eventValues);
             }
+
+            public String afGetAppsFlyerUID() {
+                return AppsFlyerLib.getInstance().getAppsFlyerUID(this);
+            }
         </insert>
     </gameActivityClassAdditions>
 </root>
