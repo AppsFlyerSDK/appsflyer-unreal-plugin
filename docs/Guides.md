@@ -6,6 +6,7 @@
 
 - [Init SDK](#init-sdk)
 - [Track Event](#inappevent)
+- [Get AppsFlyerUID](#appsflyeruid)
 - [Set Custom User Id](#customid)
 - [DeepLinking](#deeplinking)
     - [Deferred Deep Linking (Get Conversion Data)](#deferred-deep-linking)
@@ -37,6 +38,13 @@ to track ROI (Return on Investment) and LTV (Lifetime Value).
 <img src="./ScreenShots/TrackEvent.png"  width="1100">
 
 For more on in-app events check out the AppsFlyer **Knowledge base** [here](https://support.appsflyer.com/hc/en-us/articles/115005544169-AppsFlyer-Rich-In-App-Events-Android-and-iOS#Introduction).
+
+##  <a id="appsflyeruid"> Get AppsFlyerUID
+
+To receive unique AppsFlyer ID per app installation you can use this blueprint:
+
+
+<img src="./ScreenShots/GetAppFlyerUID.png" width="300">
 
 ##  <a id="customid"> Set Custom User ID
     
