@@ -44,7 +44,7 @@ For more on in-app events check out the AppsFlyer **Knowledge base** [here](http
 To receive unique AppsFlyer ID per app installation you can use this blueprint:
 
 
-<img src="./ScreenShots/GetAppFlyerUID.png" width="300">
+<img src="./ScreenShots/GetAppsFlyerUID.png" width="300">
 
 ##  <a id="customid"> Set Custom User ID
     
