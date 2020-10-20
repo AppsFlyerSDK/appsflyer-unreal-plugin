@@ -2,6 +2,8 @@
 
 # Unreal AppsFlyer Plugin
 
+v6.0.50
+
 🛠 In order for us to provide optimal support, we would kindly ask you to submit any issues to support@appsflyer.com
 
 *When submitting an issue please specify your AppsFlyer sign-up (account) email , your app ID , reproduction steps, code snippets, logs, and any additional relevant information.*
