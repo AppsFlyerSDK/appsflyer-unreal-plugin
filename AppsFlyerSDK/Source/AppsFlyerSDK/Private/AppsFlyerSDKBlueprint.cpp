@@ -10,9 +10,9 @@
 #include "AppsFlyerSDKCallbacks.h"
 #if PLATFORM_ANDROID
 #include "Android/AndroidJNI.h"
-#include "AndroidApplication.h"
+#include "Android/AndroidApplication.h"
 #elif PLATFORM_IOS
-#import <AppsFlyerLib/AppsFlyerTracker.h>
+#import <AppsFlyerLib/AppsFlyerLib.h>
 #import "UE4AFSDKDelegate.h"
 #include "IOSAppDelegate.h"
 #endif
@@ -67,12 +67,12 @@ extern "C" {
     (JNIEnv *env, jobject obj, jobject stringError) {}
 }
 #elif PLATFORM_IOS
-@protocol AppsFlyerTrackerDelegate;
+@protocol AppsFlyerLibDelegate;
 
 static void OnOpenURL(UIApplication *application, NSURL *url, NSString *sourceApplication, id annotation)
 {
     dispatch_async(dispatch_get_main_queue(), ^ {
-        [[AppsFlyerTracker sharedTracker] handleOpenURL:url sourceApplication:sourceApplication withAnnotation:annotation];
+        [[AppsFlyerLib shared] handleOpenURL:url sourceApplication:sourceApplication withAnnotation:annotation];
     });
 }
 
@@ -117,42 +117,44 @@ void UAppsFlyerSDKBlueprint::configure()
 {
     const UAppsFlyerSDKSettings *defaultSettings = GetDefault<UAppsFlyerSDKSettings>();
     const bool isDebug = defaultSettings->bIsDebug; 
+
 #if PLATFORM_ANDROID
     JNIEnv* env = FAndroidApplication::GetJavaEnv();
     jmethodID appsflyer =
         FJavaWrapper::FindMethod(env, FJavaWrapper::GameActivityClassID, "afStart", "(Ljava/lang/String;Z)V", false);
     jstring key = env->NewStringUTF(TCHAR_TO_UTF8(*defaultSettings->appsFlyerDevKey));
 
-    
-
     FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, appsflyer, key, isDebug);
+
+
 #elif PLATFORM_IOS
     dispatch_async(dispatch_get_main_queue(), ^ {
         if (!defaultSettings->appsFlyerDevKey.IsEmpty() && !defaultSettings->appleAppID.IsEmpty()) {
-            [AppsFlyerTracker sharedTracker].appsFlyerDevKey = defaultSettings->appsFlyerDevKey.GetNSString();
-            [AppsFlyerTracker sharedTracker].appleAppID = defaultSettings->appleAppID.GetNSString();
-            [AppsFlyerTracker sharedTracker].isDebug = isDebug;
+            [AppsFlyerLib shared].appsFlyerDevKey = defaultSettings->appsFlyerDevKey.GetNSString();
+            [AppsFlyerLib shared].appleAppID = defaultSettings->appleAppID.GetNSString();
+            [AppsFlyerLib shared].isDebug = isDebug;
             FIOSCoreDelegates::OnOpenURL.AddStatic(&OnOpenURL);
             UE4AFSDKDelegate *delegate = [[UE4AFSDKDelegate alloc] init];
             delegate.onConversionDataSuccess = onConversionDataSuccess;
             delegate.onConversionDataFail = onConversionDataFail;
             delegate.onAppOpenAttribution = onAppOpenAttribution;
             delegate.onAppOpenAttributionFailure = onAppOpenAttributionFailure;
-            [AppsFlyerTracker sharedTracker].delegate = (id<AppsFlyerTrackerDelegate>)delegate;
+            [AppsFlyerLib shared].delegate = (id<AppsFlyerLibDelegate>)delegate;
             UE_LOG(LogAppsFlyerSDKBlueprint, Display, TEXT("AppsFlyer: UE4 ready"));
 
-            [[AppsFlyerTracker sharedTracker] trackAppLaunch];
+            [[AppsFlyerLib shared] start];
             [[NSNotificationCenter defaultCenter] addObserverForName: UIApplicationWillEnterForegroundNotification
             object: nil
             queue: nil
             usingBlock: ^ (NSNotification * note) {
                 UE_LOG(LogAppsFlyerSDKBlueprint, Display, TEXT("UIApplicationWillEnterForegroundNotification"));
-                [[AppsFlyerTracker sharedTracker] trackAppLaunch];
+                [[AppsFlyerLib shared] start];
             }];
         }
     });
 #endif
 }
+
 void UAppsFlyerSDKBlueprint::trackAppLaunch() {
 #if PLATFORM_ANDROID
     JNIEnv* env = FAndroidApplication::GetJavaEnv();
@@ -163,7 +165,7 @@ void UAppsFlyerSDKBlueprint::trackAppLaunch() {
     FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, trackAppLaunch);
 #elif PLATFORM_IOS
     dispatch_async(dispatch_get_main_queue(), ^ {
-        [[AppsFlyerTracker sharedTracker] trackAppLaunch];
+        [[AppsFlyerLib shared] start];
     });
 #endif
 }
@@ -178,7 +180,7 @@ void UAppsFlyerSDKBlueprint::setCustomerUserId(FString customerUserId) {
     FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, setCustomerUserId, jCustomerUserId);
 #elif PLATFORM_IOS
     dispatch_async(dispatch_get_main_queue(), ^ {
-        [[AppsFlyerTracker sharedTracker] setCustomerUserID:customerUserId.GetNSString()];
+        [[AppsFlyerLib shared] setCustomerUserID:customerUserId.GetNSString()];
     });
 #endif
 }
@@ -204,7 +206,7 @@ void UAppsFlyerSDKBlueprint::trackTMapEvent(FString eventName, TMap <FString, FS
         for (const TPair<FString, FString>& pair : values) {
             [dictionary setValue:pair.Value.GetNSString() forKey:pair.Key.GetNSString()];
         }
-        [[AppsFlyerTracker sharedTracker] trackEvent:eventName.GetNSString() withValues:dictionary];
+        [[AppsFlyerLib shared] logEvent:eventName.GetNSString() withValues:dictionary];
     });
 #endif
     GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("trackEvent raised"));
@@ -228,7 +230,7 @@ FString UAppsFlyerSDKBlueprint::getAppsFlyerUID() {
     }
     return ResultStr;
 #elif PLATFORM_IOS
-    NSString *UID = [[AppsFlyerTracker sharedTracker] getAppsFlyerUID];
+    NSString *UID = [[AppsFlyerLib shared] getAppsFlyerUID];
     FString ueUID(UID);
     return ueUID;
 #else
