@@ -33,4 +33,9 @@ class APPSFLYERSDK_API UAppsFlyerSDKBlueprint : public UBlueprintFunctionLibrary
 	UFUNCTION(BlueprintCallable, Category = AppsFlyerSDK, DisplayName = "AppsFlyerSDK unique id")
 	static FString getAppsFlyerUID();
 
+	/*!
+	 * This method set a timeout till getting user consent
+	 */
+	UFUNCTION(BlueprintCallable, Category = AppsFlyerSDK, DisplayName = "AppsFlyerSDK wait for user authorization")
+	static void waitForATTUserAuthorizationWithTimeoutInterval(int timeoutInterval);
 };

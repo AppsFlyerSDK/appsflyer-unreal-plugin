@@ -141,7 +141,7 @@ void UAppsFlyerSDKBlueprint::configure()
             delegate.onAppOpenAttributionFailure = onAppOpenAttributionFailure;
             [AppsFlyerLib shared].delegate = (id<AppsFlyerLibDelegate>)delegate;
             UE_LOG(LogAppsFlyerSDKBlueprint, Display, TEXT("AppsFlyer: UE4 ready"));
-
+            
             [[AppsFlyerLib shared] start];
             [[NSNotificationCenter defaultCenter] addObserverForName: UIApplicationWillEnterForegroundNotification
             object: nil
@@ -238,5 +238,12 @@ FString UAppsFlyerSDKBlueprint::getAppsFlyerUID() {
 #endif
 }
 
+void UAppsFlyerSDKBlueprint::waitForATTUserAuthorizationWithTimeoutInterval(int timeoutInterval) {
+#if PLATFORM_IOS
+    dispatch_async(dispatch_get_main_queue(), ^ {
+        [[AppsFlyerLib shared] waitForATTUserAuthorizationWithTimeoutInterval:timeoutInterval];
+    });
+#endif
+}
 
 
