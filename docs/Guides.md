@@ -5,7 +5,7 @@
 ## Table of content
 
 - [Init SDK](#init-sdk)
-- [Track Event](#inappevent)
+- [Log Event](#inappevent)
 - [Get AppsFlyerUID](#appsflyeruid)
 - [Set Custom User Id](#customid)
 - [DeepLinking](#deeplinking)
@@ -24,15 +24,15 @@
 * **app id** - app id from the itunes store (without the 'id' prefix)
 * **is debug** - Used to dub to AppsFlyer SDK. (Development Only!)
 
-Once this is set up the AppsFlyer SDK can track all **Installs** and **Sessions**.
+Once this is set up the AppsFlyer SDK can log all **Installs** and **Sessions**.
     
-##  <a id="inappevent"> Track Event
+##  <a id="inappevent"> Log Event
     
     
 - In-app events help you track how loyal users discover your app, and attribute them to specific 
 campaigns/media-sources. Please take the time define the event/s you want to measure to allow you 
 to track ROI (Return on Investment) and LTV (Lifetime Value).
-- The `trackEvent` method allows you to send in-app events to AppsFlyer analytics. This method allows you to add events dynamically by adding them directly to the application code.
+- The `logEvent` method allows you to send in-app events to AppsFlyer analytics. This method allows you to add events dynamically by adding them directly to the application code.
     
     
 <img src="./ScreenShots/TrackEvent.png"  width="1100">

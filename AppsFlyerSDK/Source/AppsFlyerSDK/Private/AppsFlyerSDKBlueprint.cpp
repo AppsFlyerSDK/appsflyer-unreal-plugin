@@ -158,11 +158,11 @@ void UAppsFlyerSDKBlueprint::configure()
 void UAppsFlyerSDKBlueprint::start() {
 #if PLATFORM_ANDROID
     JNIEnv* env = FAndroidApplication::GetJavaEnv();
-    jmethodID trackAppLaunch = FJavaWrapper::FindMethod(env,
+    jmethodID start = FJavaWrapper::FindMethod(env,
                                FJavaWrapper::GameActivityClassID,
-                               "afTrackAppLaunch",
+                               "afStartLaunch",
                                "()V", false);
-    FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, trackAppLaunch);
+    FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, start);
 #elif PLATFORM_IOS
     dispatch_async(dispatch_get_main_queue(), ^ {
         [[AppsFlyerLib shared] start];
@@ -187,9 +187,9 @@ void UAppsFlyerSDKBlueprint::setCustomerUserId(FString customerUserId) {
 void UAppsFlyerSDKBlueprint::logEvent(FString eventName, TMap <FString, FString> values) {
 #if PLATFORM_ANDROID
     JNIEnv* env = FAndroidApplication::GetJavaEnv();
-    jmethodID trackEvent = FJavaWrapper::FindMethod(env,
+    jmethodID logEvent = FJavaWrapper::FindMethod(env,
                            FJavaWrapper::GameActivityClassID,
-                           "afTrackEvent",
+                           "afLogEvent",
                            "(Ljava/lang/String;Ljava/util/Map;)V", false);
     jstring jEventName = env->NewStringUTF(TCHAR_TO_UTF8(*eventName));
     jclass mapClass = env->FindClass("java/util/HashMap");
@@ -199,7 +199,7 @@ void UAppsFlyerSDKBlueprint::logEvent(FString eventName, TMap <FString, FString>
     for (const TPair<FString, FString>& pair : values) {
         env->CallObjectMethod(map, putMethod, env->NewStringUTF(TCHAR_TO_UTF8(*pair.Key)), env->NewStringUTF(TCHAR_TO_UTF8(*pair.Value)));
     }
-    FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, trackEvent, jEventName, map);
+    FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, logEvent, jEventName, map);
 #elif PLATFORM_IOS
     dispatch_async(dispatch_get_main_queue(), ^ {
         NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];

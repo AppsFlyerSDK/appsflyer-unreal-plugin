@@ -2,7 +2,7 @@
 
 # Unreal AppsFlyer Plugin
 
-v6.0.51
+v6.1.4
 
 🛠 In order for us to provide optimal support, we would kindly ask you to submit any issues to support@appsflyer.com
 
@@ -20,8 +20,8 @@ v6.0.51
 
 ### <a id="plugin-build-for"> This plugin is built for
 
-- iOS AppsFlyerSDK **v6.0.5**
-- Android AppsFlyerSDK **v5.4.5**
+- iOS AppsFlyerSDK **v6.1.4**
+- Android AppsFlyerSDK **v6.1.4**
 
 
 ## <a id="installation">📲Installation
@@ -39,7 +39,7 @@ v6.0.51
 ## <a id="guides"> 📖 Guides
 
 Great guides on how to use the plugin can be viewed [here](/docs/Guides.md).
-- [Track In-App Event](/docs/Guides.md#inappevent)
+- [Log In-App Event](/docs/Guides.md#inappevent)
 - [Set a Custom User Id](/docs/Guides.md#customid)
 - [Deeplinking](/docs/Guides.md#deeplinking)
 
