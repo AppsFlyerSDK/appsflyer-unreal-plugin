@@ -155,7 +155,7 @@ void UAppsFlyerSDKBlueprint::configure()
 #endif
 }
 
-void UAppsFlyerSDKBlueprint::trackAppLaunch() {
+void UAppsFlyerSDKBlueprint::start() {
 #if PLATFORM_ANDROID
     JNIEnv* env = FAndroidApplication::GetJavaEnv();
     jmethodID trackAppLaunch = FJavaWrapper::FindMethod(env,
@@ -184,7 +184,7 @@ void UAppsFlyerSDKBlueprint::setCustomerUserId(FString customerUserId) {
     });
 #endif
 }
-void UAppsFlyerSDKBlueprint::trackTMapEvent(FString eventName, TMap <FString, FString> values) {
+void UAppsFlyerSDKBlueprint::logEvent(FString eventName, TMap <FString, FString> values) {
 #if PLATFORM_ANDROID
     JNIEnv* env = FAndroidApplication::GetJavaEnv();
     jmethodID trackEvent = FJavaWrapper::FindMethod(env,
@@ -209,7 +209,7 @@ void UAppsFlyerSDKBlueprint::trackTMapEvent(FString eventName, TMap <FString, FS
         [[AppsFlyerLib shared] logEvent:eventName.GetNSString() withValues:dictionary];
     });
 #endif
-    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("trackEvent raised"));
+    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("logEvent raised"));
 }
 
 FString UAppsFlyerSDKBlueprint::getAppsFlyerUID() {

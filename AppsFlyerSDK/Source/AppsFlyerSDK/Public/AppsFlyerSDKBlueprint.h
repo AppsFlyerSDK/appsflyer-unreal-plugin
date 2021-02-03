@@ -16,11 +16,11 @@ class APPSFLYERSDK_API UAppsFlyerSDKBlueprint : public UBlueprintFunctionLibrary
 	 */
 	static void configure();
     
-	UFUNCTION(BlueprintCallable, Category = AppsFlyerSDK, DisplayName = "AppsFlyerSDK track event via Blueprint Map Node")
-	static void trackTMapEvent(FString eventName, TMap <FString, FString> values);
+	UFUNCTION(BlueprintCallable, Category = AppsFlyerSDK, DisplayName = "AppsFlyerSDK log event via Blueprint Map Node")
+	static void logEvent(FString eventName, TMap <FString, FString> values);
     
-	UFUNCTION(BlueprintCallable, Category = AppsFlyerSDK, DisplayName = "AppsFlyerSDK track app launch")
-	static void trackAppLaunch();
+	UFUNCTION(BlueprintCallable, Category = AppsFlyerSDK, DisplayName = "AppsFlyerSDK start")
+	static void start();
 	/*!
 	 * Personalize by user identifier
 	 */
