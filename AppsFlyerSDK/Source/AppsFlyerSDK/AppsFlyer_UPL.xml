@@ -6,7 +6,7 @@
             }
             dependencies {
                 implementation 'com.android.installreferrer:installreferrer:1.0'
-                implementation 'com.appsflyer:af-android-sdk:5.4.5'
+                implementation 'com.appsflyer:af-android-sdk:6.1.4'
             }
         </insert>
     </buildGradleAdditions>
@@ -42,20 +42,19 @@
                 AppsFlyerLib appsflyer = AppsFlyerLib.getInstance();
                 appsflyer.setDebugLog(isDebug);
                 appsflyer.init(key, new AppsFlyer2dXConversionCallback(), this)
-                        .startTracking((Application) getApplicationContext());
-                appsflyer.trackAppLaunch(this, key);
+                        .start((Application) getApplicationContext());
             }
 
             public void afSetCustomerUserId(String id) {
                 AppsFlyerLib.getInstance().setCustomerUserId(id);
             }
 
-            public void afTrackAppLaunch() {
-                AppsFlyerLib.getInstance().trackAppLaunch(this, afKey);
+            public void afStartLaunch() {
+                AppsFlyerLib.getInstance().start(this, afKey);
             }
 
-            public void afTrackEvent(String eventName, Map&lt;String, Object&gt; eventValues) {
-                AppsFlyerLib.getInstance().trackEvent(this, eventName, eventValues);
+            public void afLogEvent(String eventName, Map&lt;String, Object&gt; eventValues) {
+                AppsFlyerLib.getInstance().logEvent(this, eventName, eventValues);
             }
 
             public String afGetAppsFlyerUID() {
