@@ -15,6 +15,17 @@
 #import <AppsFlyerLib/AppsFlyerLib.h>
 #import "UE4AFSDKDelegate.h"
 #include "IOSAppDelegate.h"
+#import <objc/message.h>
+// SKAdNewtork request configuration workaround
+typedef void (*bypassDidFinishLaunchingWithOption)(id, SEL, NSInteger);
+
+static inline BOOL AppsFlyerIsEmptyValue(id obj) {
+    return obj == nil
+    || (NSNull *)obj == [NSNull null]
+    || ([obj respondsToSelector:@selector(length)] && [obj length] == 0)
+    || ([obj respondsToSelector:@selector(count)] && [obj count] == 0);
+}
+
 #endif
 DEFINE_LOG_CATEGORY(LogAppsFlyerSDKBlueprint);
 
@@ -130,9 +141,16 @@ void UAppsFlyerSDKBlueprint::configure()
 #elif PLATFORM_IOS
     dispatch_async(dispatch_get_main_queue(), ^ {
         if (!defaultSettings->appsFlyerDevKey.IsEmpty() && !defaultSettings->appleAppID.IsEmpty()) {
+            [AppsFlyerLib shared].disableSKAdNetwork = defaultSettings->bDisableSKAdNetwork;
             [AppsFlyerLib shared].appsFlyerDevKey = defaultSettings->appsFlyerDevKey.GetNSString();
             [AppsFlyerLib shared].appleAppID = defaultSettings->appleAppID.GetNSString();
             [AppsFlyerLib shared].isDebug = isDebug;
+            // Set currency code if value not `empty`
+            NSString *currencyCode = defaultSettings->currencyCode.GetNSString();
+            if (!AppsFlyerIsEmptyValue(currencyCode)) {
+                [AppsFlyerLib shared].currencyCode = currencyCode;   
+            }
+            
             FIOSCoreDelegates::OnOpenURL.AddStatic(&OnOpenURL);
             UE4AFSDKDelegate *delegate = [[UE4AFSDKDelegate alloc] init];
             delegate.onConversionDataSuccess = onConversionDataSuccess;
@@ -140,6 +158,15 @@ void UAppsFlyerSDKBlueprint::configure()
             delegate.onAppOpenAttribution = onAppOpenAttribution;
             delegate.onAppOpenAttributionFailure = onAppOpenAttributionFailure;
             [AppsFlyerLib shared].delegate = (id<AppsFlyerLibDelegate>)delegate;
+
+            // SKAdNewtork request configuration workaround
+            SEL SKSel = NSSelectorFromString(@"__willResolveSKRules:");
+            id AppsFlyer = [AppsFlyerLib shared];
+            if ([AppsFlyer respondsToSelector:SKSel]) {
+                bypassDidFinishLaunchingWithOption msgSend = (bypassDidFinishLaunchingWithOption)objc_msgSend;
+                msgSend(AppsFlyer, SKSel, 2);
+            }
+
             UE_LOG(LogAppsFlyerSDKBlueprint, Display, TEXT("AppsFlyer: UE4 ready"));
             
             [[AppsFlyerLib shared] start];
@@ -233,6 +260,18 @@ FString UAppsFlyerSDKBlueprint::getAppsFlyerUID() {
     NSString *UID = [[AppsFlyerLib shared] getAppsFlyerUID];
     FString ueUID(UID);
     return ueUID;
+#else
+    return FString(TEXT("Wrong platform!"));
+#endif
+}
+
+FString UAppsFlyerSDKBlueprint::advertisingIdentifier() {
+#if PLATFORM_ANDROID
+    return FString(TEXT(""));
+#elif PLATFORM_IOS
+    NSString *IDFA = [[AppsFlyerLib shared] advertisingIdentifier];
+    FString ueIDFA(IDFA);
+    return ueIDFA;
 #else
     return FString(TEXT("Wrong platform!"));
 #endif

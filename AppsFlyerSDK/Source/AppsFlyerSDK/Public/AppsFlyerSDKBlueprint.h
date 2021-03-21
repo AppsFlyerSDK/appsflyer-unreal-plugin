@@ -34,6 +34,12 @@ class APPSFLYERSDK_API UAppsFlyerSDKBlueprint : public UBlueprintFunctionLibrary
 	static FString getAppsFlyerUID();
 
 	/*!
+	 * The object that contains the advertising identifier
+	 */
+	UFUNCTION(BlueprintCallable, Category = AppsFlyerSDK, DisplayName = "AppsFlyerSDK advertising identifier")
+	static FString advertisingIdentifier();
+
+	/*!
 	 * This method set a timeout till getting user consent
 	 */
 	UFUNCTION(BlueprintCallable, Category = AppsFlyerSDK, DisplayName = "AppsFlyerSDK wait for user authorization")
