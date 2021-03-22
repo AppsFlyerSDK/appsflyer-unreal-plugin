@@ -233,6 +233,16 @@ void UAppsFlyerSDKBlueprint::logEvent(FString eventName, TMap <FString, FString>
         for (const TPair<FString, FString>& pair : values) {
             [dictionary setValue:pair.Value.GetNSString() forKey:pair.Key.GetNSString()];
         }
+
+        // Transform `af_revenue` value to NSNumber in case if value of NSString type
+        id revenueString = dictionary[@"af_revenue"];
+        if (revenueString && [revenueString isKindOfClass:[NSString class]]) {
+            NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+            formatter.numberStyle = NSNumberFormatterDecimalStyle;
+            NSNumber *revenueNumber = [formatter numberFromString:revenueString];
+            dictionary[@"af_revenue"] = revenueNumber;
+        }
+
         [[AppsFlyerLib shared] logEvent:eventName.GetNSString() withValues:dictionary];
     });
 #endif
