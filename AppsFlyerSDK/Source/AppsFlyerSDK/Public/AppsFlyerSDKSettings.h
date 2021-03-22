@@ -25,4 +25,12 @@ public:
     // runs AppsFlyer SDK in the debug mode
 	UPROPERTY(Config, EditAnywhere, config, Category = "AppsFlyer")
 	bool bIsDebug;
+
+    // AppsFlyer The currency code is a 3 letter code according to ISO standards
+    UPROPERTY(Config, EditAnywhere, Category = "AppsFlyer", meta = (DisplayName = "Currency Code(Only iOS)"))
+    FString currencyCode;
+
+    // Disable SKAdNetwork
+    UPROPERTY(Config, EditAnywhere, config, Category = "AppsFlyer", meta = (DisplayName = "Disable SKAdNetwork(Only iOS)"))
+    bool bDisableSKAdNetwork;
 };

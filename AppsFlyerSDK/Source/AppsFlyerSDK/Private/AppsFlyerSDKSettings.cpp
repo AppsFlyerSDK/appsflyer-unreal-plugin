@@ -9,5 +9,7 @@ UAppsFlyerSDKSettings::UAppsFlyerSDKSettings(const FObjectInitializer& ObjectIni
     , appsFlyerDevKey("")
     , appleAppID("")
     , bIsDebug(false)
+    , currencyCode("")
+    , bDisableSKAdNetwork(false)
 {
 }
