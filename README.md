@@ -2,7 +2,7 @@
 
 # Unreal AppsFlyer Plugin
 
-v6.1.4
+v6.2.4
 
 🛠 In order for us to provide optimal support, we would kindly ask you to submit any issues to support@appsflyer.com
 
