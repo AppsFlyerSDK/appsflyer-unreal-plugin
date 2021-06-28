@@ -42,7 +42,7 @@
                 AppsFlyerLib appsflyer = AppsFlyerLib.getInstance();
                 appsflyer.setDebugLog(isDebug);
                 appsflyer.init(key, new AppsFlyer2dXConversionCallback(), this)
-                        .start((Application) getApplicationContext());
+                        .start(this);
             }
 
             public void afSetCustomerUserId(String id) {
