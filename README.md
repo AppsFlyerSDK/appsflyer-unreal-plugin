@@ -2,7 +2,7 @@
 
 # Unreal AppsFlyer Plugin
 
-v6.2.6
+v6.4.0
 
 🛠 In order for us to provide optimal support, we would kindly ask you to submit any issues to support@appsflyer.com
 
@@ -20,8 +20,8 @@ v6.2.6
 
 ### <a id="plugin-build-for"> This plugin is built for
 
-- iOS AppsFlyerSDK **v6.2.6**
-- Android AppsFlyerSDK **v6.3.0**
+- iOS AppsFlyerSDK **v6.4.0**
+- Android AppsFlyerSDK **v6.4.0**
 
 
 ## <a id="installation">📲Installation
