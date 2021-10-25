@@ -17,6 +17,10 @@ public:
     // AppsFlyer Dev Key
     UPROPERTY(Config, EditAnywhere, Category = "AppsFlyer", meta = (DisplayName = "AppsFlyer Dev Key"))
     FString appsFlyerDevKey;
+
+	// AppsFlyer Dev Key for IOS. Leave blank if you want to use the same key from "AppsFlyer Dev Key" setting.
+	UPROPERTY(Config, EditAnywhere, Category = "AppsFlyer", meta = (DisplayName = "AppsFlyer Dev Key IOS (Leave blank if same as above)"))
+	FString appsFlyerDevKeyIOS;
     
     // Apple App ID
     UPROPERTY(Config, EditAnywhere, Category = "AppsFlyer", meta = (DisplayName = "Apple App ID"))
