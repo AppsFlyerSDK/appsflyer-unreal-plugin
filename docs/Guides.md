@@ -8,6 +8,9 @@
 - [Log Event](#inappevent)
 - [Get AppsFlyerUID](#appsflyeruid)
 - [Set Custom User Id](#customid)
+- [Uninstall tracking](#uninstall)
+    - [iOS Uninstall](#iOSUninstall)
+    - [Android Uninstall](#androidUninstall)
 - [DeepLinking](#deeplinking)
     - [Deferred Deep Linking (Get Conversion Data)](#deferred-deep-linking)
     - [Direct Deeplinking](#handle-deeplinking)
@@ -53,6 +56,77 @@ Setting your own Custom ID enables you to cross-reference your own unique ID wit
 **IMPORTANT**: If you want to have CUID in the install record, you need to set it before SDK send out first launch. If implemented as per screenshot above it will happen before the launch is sent. For more details please check out this articles: [iOS](https://support.appsflyer.com/hc/en-us/articles/207032066-iOS-SDK-integration-for-developers#additional-apis) and [Android](https://support.appsflyer.com/hc/en-us/articles/207032126-Android-SDK-integration-for-developers#additional-apis-set-customer-user-id).
 
 <img src="./ScreenShots/CustomUserId.png"  width="1100">
+
+##  <a id="uninstall"> Uninstall
+    
+AppsFlyer uses silent push notifications, once a day, to verify if an app is still installed on a given device. If there is no response, an uninstall is recorded, and it's attributed to the media source that originally brought the user.
+
+First, make sure to read the relevant information regarding [uninstall feature in the AppsFlyer dashboard](https://support.appsflyer.com/hc/en-us/articles/210289286-Uninstall-measurement)
+
+<a id="iOSUninstall">**iOS**
+
+**Important!**
+
+1.  To support remote notification in IOS, [download, compile and run Unreal Engine from the source](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/DownloadingSourceCode) .
+
+<img src="./ScreenShots/buildingFromSource.png"  width="1100">
+
+Find more information in the [official unreal docs]((https://docs.unrealengine.com/4.27/en-US/SharingAndReleasing/Mobile/LocalNotifications))
+
+
+
+2. After the Unreal engine is running, open the Unreal IDE and go to settings > platforms -> iOS -> enable the remote notification support checkbox.
+
+<img src="./ScreenShots/iOSenableRemoteNotification.png"  width="1100">
+
+
+3. Under the setting -> Maps & Mods -> Game instance -> change the instance class to PlatformGameInstance
+
+<img src="./ScreenShots/gameInstance.png"  width="1100">
+
+
+4. Configure the nodes under the relevant blueprint:
+
+<img src="./ScreenShots/nodeEvents.png"  width="1100">
+
+- **Register for remote notification** Will show a pop-up to the user from the OS, asking permission for remote notification
+
+- **Application registered for remote notifications delegate** call AppsFlyer uninstall API from [iOS lifecycle](https://support.appsflyer.com/hc/en-us/articles/360017822118-Integrate-Android-uninstall-measurement-into-an-app)
+
+- **AppsFlyerSDK remote notification token**  call AppsFlyer API for sending the token.
+
+
+5. To debug enable AppsFlyer debug logs and check for the Register endpoint
+
+    <img src="./ScreenShots/iOSLogs.png"  width="1100">
+
+
+<a id="androidUninstall">**Android**
+
+For Android make sure to complete the steps in the [following article](https://support.appsflyer.com/hc/en-us/articles/360017822118-Integrate-Android-uninstall-measurement-into-an-app)
+
+1. Configure [Firebase cloud messaging](https://support.appsflyer.com/hc/en-us/articles/360017822118-Integrate-Android-uninstall-measurement-into-an-app#http-v1)
+
+2. Follow the steps to [integrate into the app](https://support.appsflyer.com/hc/en-us/articles/360017822118-Integrate-Android-uninstall-measurement-into-an-app#integrate-fcm-into-the-app)
+
+3. Make sure to use appsFlyer.FirebaseMessagingServiceListener service, embedded in the SDK. This extends the FirebaseFirebaseMessagingService class, used to receive the FCM Device Token:
+
+```xml
+<application
+   <!-- ... -->
+      <service
+        android:name="com.appsflyer.FirebaseMessagingServiceListener">
+        <intent-filter>
+          <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+        </intent-filter>
+      </service>
+   <!-- ... -->
+</application>
+```
+
+4. Same nodes could be used (as in iOS) for Android under the relevant blueprint (no API call).
+
+ <img src="./ScreenShots/nodeEvents.png"  width="1100">
 
 
 ##  <a id="deeplinking"> Deep Linking
@@ -142,9 +216,3 @@ Essentially, the Universal Links method links between an iOS mobile app and an a
 </plist>
 ```
 
-
-
-
-##  <a id="demo"> Demo
-    
-Coming Soon!

@@ -1,4 +1,6 @@
-<img src="https://www.appsflyer.com/wp-content/uploads/2016/11/logo-1.svg"  width="400">
+<img src="./docs/ScreenShots/unrealLogo.png"  width="400">
+
+
 
 # Unreal AppsFlyer Plugin
 
@@ -14,7 +16,13 @@ v6.4.0
 - [Installation](#installation)
 - [Guides](#guides)
 - [Setup](#setup)
-- [API](#api) 
+- [Guides & API](/docs/Guides.md)
+  - [Init SDK](/docs/Guides.md#init-sdk)
+  - [Log Event](/docs/Guides.md#inappevent)
+  - [Get AppsFlyerUID](/docs/Guides.md#appsflyeruid)
+  - [Set Custom User Id](/docs/Guides.md#customid)
+  - [Uninstall tracking](/docs/Guides.md#uninstall)
+  - [DeepLinking](/docs/Guides.md#deeplinking)
 - [Demo](#demo)  
 
 
@@ -36,7 +44,7 @@ v6.4.0
 ```
 
 
-## <a id="guides"> 📖 Guides
+## <a id="Guides & API"> 📖 Guides
 
 Great guides on how to use the plugin can be viewed [here](/docs/Guides.md).
 - [Log In-App Event](/docs/Guides.md#inappevent)
@@ -48,7 +56,7 @@ Great guides on how to use the plugin can be viewed [here](/docs/Guides.md).
 
 First open Settings > Project Setting... and locate AppsFlyer under the Plugins section.
 
-<img src="/docs/ScreenShots/ProjectSettings1.png"  width="700">
+<img src="./docs/ScreenShots/ProjectSettings1.png"  width="700">
 
 
 ####  Set your App_ID (iOS only), Dev_Key and enable AppsFlyer to detect installations, sessions (app opens) and updates.  
@@ -57,19 +65,15 @@ First open Settings > Project Setting... and locate AppsFlyer under the Plugins 
 **Apple App ID**  - ***For iOS only.*** Your iTunes Application ID.<br>
 **Is Debug** - When enabled the AppsFlyer SDK debug logs will be printed (development only!)
 
-<img src="/docs/ScreenShots/ProjectSettings2.png"  width="1100">
+<img src="./docs/ScreenShots/ProjectSettings2.png"  width="1100">
 
 Once your dev key and app_id is set you are ready to use AppsFlyer! 
 
 You will also need to make sure your package name is set up with a AppsFlyer Dashboard.
 
-<img src="/docs/ScreenShots/PackageName.png"  width="700">
-
-## <a id="api"> 📑 API
-
-See the full [API](/docs/API.md) available for this plugin.
+<img src="./docs/ScreenShots/PackageName.png"  width="700">
 
 
 ## <a id="demo"> 📱 Demo
 
-Check out the demo for this project [here](docs/Guides.md#demo).
+Check out the demo for this project [here](https://github.com/AppsFlyerSDK/appsflyer-unreal-plugin/tree/master/Demo).
