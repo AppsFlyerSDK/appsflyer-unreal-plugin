@@ -16,6 +16,7 @@
 #import "UE4AFSDKDelegate.h"
 #include "IOSAppDelegate.h"
 #import <objc/message.h>
+
 // SKAdNewtork request configuration workaround
 typedef void (*bypassDidFinishLaunchingWithOption)(id, SEL, NSInteger);
 
@@ -292,6 +293,21 @@ void UAppsFlyerSDKBlueprint::waitForATTUserAuthorizationWithTimeoutInterval(int 
     dispatch_async(dispatch_get_main_queue(), ^ {
         [[AppsFlyerLib shared] waitForATTUserAuthorizationWithTimeoutInterval:timeoutInterval];
     });
+#endif
+}
+    
+void UAppsFlyerSDKBlueprint::setRemoteNotificationsToken(const TArray<uint8>& token) {
+#if PLATFORM_ANDROID
+    return;
+#elif PLATFORM_IOS
+    const uint8* tokenRef = token.GetData();
+    NSData *tokenData = [NSData dataWithBytes:tokenRef length:token.Num()];
+    
+    dispatch_async(dispatch_get_main_queue(), ^ {
+        [[AppsFlyerLib shared] registerUninstall:tokenData];
+    });
+#else
+    return;
 #endif
 }
 
