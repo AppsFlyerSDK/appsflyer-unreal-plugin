@@ -14,7 +14,6 @@ v6.4.0
 
 - [SDK versions](#plugin-build-for)
 - [Installation](#installation)
-- [Guides](#guides)
 - [Setup](#setup)
 - [Guides & API](/docs/Guides.md)
   - [Init SDK](/docs/Guides.md#init-sdk)
@@ -42,15 +41,6 @@ v6.4.0
           └── AppsFlyerSDK
               └── AppsFlyerSDK.uplugin
 ```
-
-
-## <a id="Guides & API"> 📖 Guides
-
-Great guides on how to use the plugin can be viewed [here](/docs/Guides.md).
-- [Log In-App Event](/docs/Guides.md#inappevent)
-- [Set a Custom User Id](/docs/Guides.md#customid)
-- [Deeplinking](/docs/Guides.md#deeplinking)
-
 
 ## <a id="setup"> 🚀 Setup
 

@@ -21,7 +21,7 @@
 
 ##  <a id="init-sdk"> Init SDK
     
-<img src="./ScreenShots/ProjectSettings2.png"  width="1100">
+<img src="./ScreenShots/ProjectSettings2.png"  width="650">
 
 * **dev key** - Found under App Settings in your AppsFlyer Dashboard.
 * **app id** - app id from the itunes store (without the 'id' prefix)
@@ -67,11 +67,13 @@ First, make sure to read the relevant information regarding [uninstall feature i
 
 **Important!**
 
-1.  To support remote notification in IOS, [download, compile and run Unreal Engine from the source](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/DownloadingSourceCode) .
+1.  To support remote notification in IOS follow the [official unreal docs](https://docs.unrealengine.com/4.27/en-US/SharingAndReleasing/Mobile/LocalNotifications).
+
+Don't forget to [download, compile and run Unreal Engine from the source](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/DownloadingSourceCode) .
 
 <img src="./ScreenShots/buildingFromSource.png"  width="1100">
 
-Find more information in the [official unreal docs]((https://docs.unrealengine.com/4.27/en-US/SharingAndReleasing/Mobile/LocalNotifications))
+Find more information in the 
 
 
 
@@ -124,7 +126,7 @@ For Android make sure to complete the steps in the [following article](https://s
 </application>
 ```
 
-4. Same nodes could be used (as in iOS) for Android under the relevant blueprint (no API call).
+4. Same nodes could be used (as in iOS) for Android under the relevant blueprint (no API call needed).
 
  <img src="./ScreenShots/nodeEvents.png"  width="1100">
 
