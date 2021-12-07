@@ -17,11 +17,12 @@ v6.4.3
 - [Setup](#setup)
 - [Guides & API](/docs/Guides.md)
   - [Init SDK](/docs/Guides.md#init-sdk)
+  - [Start](/docs/Guides.md#start)
   - [Log Event](/docs/Guides.md#inappevent)
   - [Get AppsFlyerUID](/docs/Guides.md#appsflyeruid)
   - [Set Custom User Id](/docs/Guides.md#customid)
   - [Uninstall tracking](/docs/Guides.md#uninstall)
-  - [set Additional Data](/docs/Guides.md#setAdditionalData)
+  - [Set Additional Data](/docs/Guides.md#setAdditionalData)
   - [DeepLinking](/docs/Guides.md#deeplinking)
 - [Demo](#demo)  
 

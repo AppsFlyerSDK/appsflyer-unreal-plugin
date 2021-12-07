@@ -12,6 +12,7 @@
 - [Uninstall tracking](#uninstall)
     - [iOS Uninstall](#iOSUninstall)
     - [Android Uninstall](#androidUninstall)
+[Set Additional Data](/docs/Guides.md#setAdditionalData)
 - [DeepLinking](#deeplinking)
     - [Deferred Deep Linking (Get Conversion Data)](#deferred-deep-linking)
     - [Direct Deeplinking](#handle-deeplinking)
@@ -23,11 +24,11 @@
     
 <img src="./ScreenShots/ProjectSettings2.png"  width="650">
 
-* **dev key** - Found under App Settings in your AppsFlyer Dashboard.
-* **app id** - app id from the itunes store (without the 'id' prefix)
-* **is debug** - Used to dub to AppsFlyer SDK. (Development Only!)
+* **Dev key** - Found under App Settings in your AppsFlyer Dashboard.
+* **App id** - app id from the itunes store (without the 'id' prefix)
+* **Is debug** - Used to dub to AppsFlyer SDK. (Development Only!). Once this is set up the AppsFlyer SDK can log all Installs and Sessions.
 
-Once this is set up the AppsFlyer SDK can log all **Installs** and **Sessions**.
+* **Currency Code (only iOS)** - Defines the app currency method
 
 * **Disable SKAdNetwork(Only iOS)** - Disable SKAdNetwork sessions
 
