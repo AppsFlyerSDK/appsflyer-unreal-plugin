@@ -13,7 +13,7 @@ Release type: **Major** / Minor / Hotfix
   * void afSetCustomerUserId(String id)
   * void void afLogEvent(String eventName, Map<String, Object> eventValues)
   
-- Android SDK to v4.9.0
+- Android SDK to v6.4.3
 
-- iOS SDK to v4.9.0
+- iOS SDK to v6.4.4
 

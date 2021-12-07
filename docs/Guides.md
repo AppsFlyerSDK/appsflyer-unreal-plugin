@@ -5,6 +5,7 @@
 ## Table of content
 
 - [Init SDK](#init-sdk)
+- [Start](#start)
 - [Log Event](#inappevent)
 - [Get AppsFlyerUID](#appsflyeruid)
 - [Set Custom User Id](#customid)
@@ -18,7 +19,6 @@
     - [iOS Deeplink Setup](#ios-deeplink)
 - [Demo](#demo)
 
-
 ##  <a id="init-sdk"> Init SDK
     
 <img src="./ScreenShots/ProjectSettings2.png"  width="650">
@@ -28,7 +28,20 @@
 * **is debug** - Used to dub to AppsFlyer SDK. (Development Only!)
 
 Once this is set up the AppsFlyer SDK can log all **Installs** and **Sessions**.
-    
+
+* **Disable SKAdNetwork(Only iOS)** - Disable SKAdNetwork sessions
+
+* **Enable AppsFlyerSDK automatic start** - When set to true, the SDK will be sending a session automatically (before Blueprint events). If set to false, it's the developer responsability to call the start API from the Blueprint.
+
+##  <a id="start"> Start
+
+Starts the SDK by sending the session to the server.
+
+As a default, the start method is being called automatically once the app is being launch.
+If needed, this setting can be disabled in the Plugin settings, and the developer can call the start method under the blueprint.
+
+<img src="./ScreenShots/startManually.png"  width="400">
+
 ##  <a id="inappevent"> Log Event
     
     
@@ -53,9 +66,15 @@ To receive unique AppsFlyer ID per app installation you can use this blueprint:
     
 Setting your own Custom ID enables you to cross-reference your own unique ID with AppsFlyer’s user ID and the other devices’ IDs. This ID is available in AppsFlyer CSV reports along with postbacks APIs for cross-referencing with you internal IDs.
 
-**IMPORTANT**: If you want to have CUID in the install record, you need to set it before SDK send out first launch. If implemented as per screenshot above it will happen before the launch is sent. For more details please check out this articles: [iOS](https://support.appsflyer.com/hc/en-us/articles/207032066-iOS-SDK-integration-for-developers#additional-apis) and [Android](https://support.appsflyer.com/hc/en-us/articles/207032126-Android-SDK-integration-for-developers#additional-apis-set-customer-user-id).
-
 <img src="./ScreenShots/CustomUserId.png"  width="1100">
+
+**IMPORTANT**: In order for the user ID to be define in the first SDK session, please follow these steps:
+
+1. Set the `Enable AppsFlyerSDK automatic start` flag under the plugin setting to false.
+
+<img src="./ScreenShots/disableAutoStart.png"  width="500">
+
+2. Call the `Set Custom User ID` API before the call to the `Start` API under the Blueprint:
 
 ##  <a id="uninstall"> Uninstall
     
@@ -130,6 +149,23 @@ For Android make sure to complete the steps in the [following article](https://s
 
  <img src="./ScreenShots/nodeEvents.png"  width="1100">
 
+
+##  <a id="setAdditionalData"> Set Additional Data
+    
+Use to add custom key-value pairs to the payload of each event, including installs. These values will appear in raw-data reports.
+
+<img src="./ScreenShots/setAdditionalData.png"  width="500">
+
+
+**IMPORTANT** In order for the additional data to be included in the first SDK session, please follow these steps: 
+
+1. Set the `Enable AppsFlyerSDK automatic start` under the plugin setting to false.
+
+<img src="./ScreenShots/disableAutoStart.png"  width="500">
+
+2. Call the `setAdditionalData` API before the call to the `Start` API:
+
+<img src="./ScreenShots/setAdditionalDataBeforeStart.png"  width="500">
 
 ##  <a id="deeplinking"> Deep Linking
     
