@@ -4,7 +4,7 @@
 
 # Unreal AppsFlyer Plugin
 
-v6.4.2
+v6.4.4
 
 🛠 In order for us to provide optimal support, we would kindly ask you to submit any issues to support@appsflyer.com
 
@@ -17,18 +17,20 @@ v6.4.2
 - [Setup](#setup)
 - [Guides & API](/docs/Guides.md)
   - [Init SDK](/docs/Guides.md#init-sdk)
+  - [Start](/docs/Guides.md#start)
   - [Log Event](/docs/Guides.md#inappevent)
   - [Get AppsFlyerUID](/docs/Guides.md#appsflyeruid)
   - [Set Custom User Id](/docs/Guides.md#customid)
   - [Uninstall tracking](/docs/Guides.md#uninstall)
+  - [Set Additional Data](/docs/Guides.md#setAdditionalData)
   - [DeepLinking](/docs/Guides.md#deeplinking)
 - [Demo](#demo)  
 
 
 ### <a id="plugin-build-for"> This plugin is built for
 
-- iOS AppsFlyerSDK **v6.4.2**
-- Android AppsFlyerSDK **v6.4.2**
+- iOS AppsFlyerSDK **v6.4.4**
+- Android AppsFlyerSDK **v6.4.3**
 
 
 ## <a id="installation">📲Installation

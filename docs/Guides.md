@@ -5,12 +5,14 @@
 ## Table of content
 
 - [Init SDK](#init-sdk)
+- [Start](#start)
 - [Log Event](#inappevent)
 - [Get AppsFlyerUID](#appsflyeruid)
 - [Set Custom User Id](#customid)
 - [Uninstall tracking](#uninstall)
     - [iOS Uninstall](#iOSUninstall)
     - [Android Uninstall](#androidUninstall)
+- [Set Additional Data](#setAdditionalData)
 - [DeepLinking](#deeplinking)
     - [Deferred Deep Linking (Get Conversion Data)](#deferred-deep-linking)
     - [Direct Deeplinking](#handle-deeplinking)
@@ -18,17 +20,29 @@
     - [iOS Deeplink Setup](#ios-deeplink)
 - [Demo](#demo)
 
-
 ##  <a id="init-sdk"> Init SDK
     
 <img src="./ScreenShots/ProjectSettings2.png"  width="650">
 
-* **dev key** - Found under App Settings in your AppsFlyer Dashboard.
-* **app id** - app id from the itunes store (without the 'id' prefix)
-* **is debug** - Used to dub to AppsFlyer SDK. (Development Only!)
+* **Dev key** - Found under App Settings in your AppsFlyer Dashboard.
+* **App id** - app id from the itunes store (without the 'id' prefix)
+* **Is debug** - Used to dub to AppsFlyer SDK. (Development Only!). Once this is set up the AppsFlyer SDK can log all Installs and Sessions.
 
-Once this is set up the AppsFlyer SDK can log all **Installs** and **Sessions**.
-    
+* **Currency Code (only iOS)** - Defines the app currency method
+
+* **Disable SKAdNetwork(Only iOS)** - Disable SKAdNetwork sessions
+
+* **Automatically start the AppsFlyer SDK** - When set to true, the SDK will be sending a session automatically (before Blueprint events). If set to false, it's the developer responsability to call the start API from the Blueprint.
+
+##  <a id="start"> Start
+
+* Starts the SDK by sending the session to the server.
+
+* As a default, the start method is being called automatically once the app is being launch.
+
+* If needed, this setting can be disabled in the Plugin settings, and the developer can call the start method under the blueprint. When doing so, the SDK will send a session on every background-foreground transition.
+<img src="./ScreenShots/autoStartOff.png"  width="400">
+
 ##  <a id="inappevent"> Log Event
     
     
@@ -53,9 +67,14 @@ To receive unique AppsFlyer ID per app installation you can use this blueprint:
     
 Setting your own Custom ID enables you to cross-reference your own unique ID with AppsFlyer’s user ID and the other devices’ IDs. This ID is available in AppsFlyer CSV reports along with postbacks APIs for cross-referencing with you internal IDs.
 
-**IMPORTANT**: If you want to have CUID in the install record, you need to set it before SDK send out first launch. If implemented as per screenshot above it will happen before the launch is sent. For more details please check out this articles: [iOS](https://support.appsflyer.com/hc/en-us/articles/207032066-iOS-SDK-integration-for-developers#additional-apis) and [Android](https://support.appsflyer.com/hc/en-us/articles/207032126-Android-SDK-integration-for-developers#additional-apis-set-customer-user-id).
-
 <img src="./ScreenShots/CustomUserId.png"  width="1100">
+
+**IMPORTANT**: In order for the user ID to be define in the first SDK session, please follow these steps:
+
+1. Set the `Automatically start the AppsFlyer SDK` flag under the plugin setting to false.
+<img src="./ScreenShots/autoStartOff.png"  width="500">
+
+2. Call the `Set Custom User ID` API before the call to the `Start` API under the Blueprint:
 
 ##  <a id="uninstall"> Uninstall
     
@@ -70,7 +89,6 @@ First, make sure to read the relevant information regarding [uninstall feature i
 1.  To support remote notification in IOS follow the [official unreal docs](https://docs.unrealengine.com/4.27/en-US/SharingAndReleasing/Mobile/LocalNotifications).
 
 Don't forget to [download, compile and run Unreal Engine from the source](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/DownloadingSourceCode) .
-
 <img src="./ScreenShots/buildingFromSource.png"  width="1100">
 
 Find more information in the 
@@ -78,17 +96,14 @@ Find more information in the
 
 
 2. After the Unreal engine is running, open the Unreal IDE and go to settings > platforms -> iOS -> enable the remote notification support checkbox.
-
 <img src="./ScreenShots/iOSenableRemoteNotification.png"  width="1100">
 
 
 3. Under the setting -> Maps & Mods -> Game instance -> change the instance class to PlatformGameInstance
-
 <img src="./ScreenShots/gameInstance.png"  width="1100">
 
 
 4. Configure the nodes under the relevant blueprint:
-
 <img src="./ScreenShots/nodeEvents.png"  width="1100">
 
 - **Register for remote notification** Will show a pop-up to the user from the OS, asking permission for remote notification
@@ -127,9 +142,23 @@ For Android make sure to complete the steps in the [following article](https://s
 ```
 
 4. Same nodes could be used (as in iOS) for Android under the relevant blueprint (no API call needed).
-
  <img src="./ScreenShots/nodeEvents.png"  width="1100">
 
+
+##  <a id="setAdditionalData"> Set Additional Data
+    
+Use to add custom key-value pairs to the payload of each event, including installs. These values will appear in raw-data reports.
+
+<img src="./ScreenShots/setAdditionalData.png"  width="500">
+
+
+**IMPORTANT** In order for the additional data to be included in the first SDK session, please follow these steps: 
+
+1. Set the `Automatically start the AppsFlyer SDK` under the plugin setting to false.
+<img src="./ScreenShots/autoStartOff.png"  width="500">
+
+2. Call the `setAdditionalData` API before the call to the `Start` API:
+<img src="./ScreenShots/setAdditionalDataBeforeStart.png"  width="500">
 
 ##  <a id="deeplinking"> Deep Linking
     

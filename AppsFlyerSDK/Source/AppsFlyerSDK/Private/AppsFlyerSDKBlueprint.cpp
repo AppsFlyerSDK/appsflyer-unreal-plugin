@@ -129,15 +129,16 @@ void UAppsFlyerSDKBlueprint::configure()
 {
     const UAppsFlyerSDKSettings *defaultSettings = GetDefault<UAppsFlyerSDKSettings>();
     const bool isDebug = defaultSettings->bIsDebug; 
-
+    const bool isAutoStart = defaultSettings->bEnableAutoStart; 
 #if PLATFORM_ANDROID
-    JNIEnv* env = FAndroidApplication::GetJavaEnv();
-    jmethodID appsflyer =
-        FJavaWrapper::FindMethod(env, FJavaWrapper::GameActivityClassID, "afStart", "(Ljava/lang/String;Z)V", false);
-    jstring key = env->NewStringUTF(TCHAR_TO_UTF8(*defaultSettings->appsFlyerDevKey));
+    if(isAutoStart){
+        JNIEnv* env = FAndroidApplication::GetJavaEnv();
+        jmethodID appsflyer =
+            FJavaWrapper::FindMethod(env, FJavaWrapper::GameActivityClassID, "afStart", "(Ljava/lang/String;Z)V", false);
+        jstring key = env->NewStringUTF(TCHAR_TO_UTF8(*defaultSettings->appsFlyerDevKey));
 
-    FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, appsflyer, key, isDebug);
-
+        FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, appsflyer, key, isDebug);
+    }
 
 #elif PLATFORM_IOS
     dispatch_async(dispatch_get_main_queue(), ^ {
@@ -151,7 +152,7 @@ void UAppsFlyerSDKBlueprint::configure()
             if (!AppsFlyerIsEmptyValue(currencyCode)) {
                 [AppsFlyerLib shared].currencyCode = currencyCode;   
             }
-            
+
             FIOSCoreDelegates::OnOpenURL.AddStatic(&OnOpenURL);
             UE4AFSDKDelegate *delegate = [[UE4AFSDKDelegate alloc] init];
             delegate.onConversionDataSuccess = onConversionDataSuccess;
@@ -169,31 +170,41 @@ void UAppsFlyerSDKBlueprint::configure()
             }
 
             UE_LOG(LogAppsFlyerSDKBlueprint, Display, TEXT("AppsFlyer: UE4 ready"));
-            
-            [[AppsFlyerLib shared] start];
-            [[NSNotificationCenter defaultCenter] addObserverForName: UIApplicationWillEnterForegroundNotification
-            object: nil
-            queue: nil
-            usingBlock: ^ (NSNotification * note) {
-                UE_LOG(LogAppsFlyerSDKBlueprint, Display, TEXT("UIApplicationWillEnterForegroundNotification"));
+            if(isAutoStart){
                 [[AppsFlyerLib shared] start];
-            }];
+                [[NSNotificationCenter defaultCenter] addObserverForName: UIApplicationWillEnterForegroundNotification
+                object: nil
+                queue: nil
+                usingBlock: ^ (NSNotification * note) {
+                    UE_LOG(LogAppsFlyerSDKBlueprint, Display, TEXT("UIApplicationWillEnterForegroundNotification"));
+                    [[AppsFlyerLib shared] start];
+                }];
+            }
         }
     });
 #endif
 }
 
 void UAppsFlyerSDKBlueprint::start() {
+    const UAppsFlyerSDKSettings *defaultSettings = GetDefault<UAppsFlyerSDKSettings>();
+    const bool isDebug = defaultSettings->bIsDebug; 
 #if PLATFORM_ANDROID
     JNIEnv* env = FAndroidApplication::GetJavaEnv();
-    jmethodID start = FJavaWrapper::FindMethod(env,
-                               FJavaWrapper::GameActivityClassID,
-                               "afStartLaunch",
-                               "()V", false);
-    FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, start);
+    jmethodID start =
+        FJavaWrapper::FindMethod(env, FJavaWrapper::GameActivityClassID, "afStart", "(Ljava/lang/String;Z)V", false);
+    jstring key = env->NewStringUTF(TCHAR_TO_UTF8(*defaultSettings->appsFlyerDevKey));
+
+    FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, start, key, isDebug);
 #elif PLATFORM_IOS
     dispatch_async(dispatch_get_main_queue(), ^ {
+        static id observer;
         [[AppsFlyerLib shared] start];
+        if (!observer) {
+            observer = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillEnterForegroundNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+                UE_LOG(LogAppsFlyerSDKBlueprint, Display, TEXT("UIApplicationWillEnterForegroundNotification"));
+                [[AppsFlyerLib shared] start];
+            }];
+        }
     });
 #endif
 }
@@ -311,4 +322,32 @@ void UAppsFlyerSDKBlueprint::setRemoteNotificationsToken(const TArray<uint8>& to
 #endif
 }
 
+void UAppsFlyerSDKBlueprint::setAdditionalData(TMap <FString, FString> customData) {
 
+#if PLATFORM_ANDROID
+    JNIEnv* env = FAndroidApplication::GetJavaEnv();
+    jmethodID setAdditionalData = FJavaWrapper::FindMethod(env,
+                                    FJavaWrapper::GameActivityClassID,
+                                    "afSetAdditionalData",
+                                    "(Ljava/util/Map;)V", false);
+    jclass mapClass = env->FindClass("java/util/HashMap");
+    jmethodID mapConstructor = env->GetMethodID(mapClass, "<init>", "()V");
+    jobject map = env->NewObject(mapClass, mapConstructor);
+    jmethodID putMethod = env->GetMethodID(mapClass, "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
+    for (const TPair<FString, FString>& pair : customData) {
+        env->CallObjectMethod(map, putMethod, env->NewStringUTF(TCHAR_TO_UTF8(*pair.Key)), env->NewStringUTF(TCHAR_TO_UTF8(*pair.Value)));
+    }
+    FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, setAdditionalData, map);
+    return;
+#elif PLATFORM_IOS
+    dispatch_async(dispatch_get_main_queue(), ^ {
+        NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+        for (const TPair<FString, FString>& pair : customData) {
+            [dictionary setValue:pair.Value.GetNSString() forKey:pair.Key.GetNSString()];
+        }
+        [[AppsFlyerLib shared] setAdditionalData:dictionary];
+    });
+#else
+    return;
+#endif
+}

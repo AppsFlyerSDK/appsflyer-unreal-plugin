@@ -11,5 +11,6 @@ UAppsFlyerSDKSettings::UAppsFlyerSDKSettings(const FObjectInitializer& ObjectIni
     , bIsDebug(false)
     , currencyCode("")
     , bDisableSKAdNetwork(false)
+    , bEnableAutoStart(true)
 {
 }
