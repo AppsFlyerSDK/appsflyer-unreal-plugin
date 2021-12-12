@@ -197,14 +197,14 @@ void UAppsFlyerSDKBlueprint::start() {
     FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, start, key, isDebug);
 #elif PLATFORM_IOS
     dispatch_async(dispatch_get_main_queue(), ^ {
+        static id observer;
         [[AppsFlyerLib shared] start];
-        [[NSNotificationCenter defaultCenter] addObserverForName: UIApplicationWillEnterForegroundNotification
-                object: nil
-                queue: nil
-                usingBlock: ^ (NSNotification * note) {
-                    UE_LOG(LogAppsFlyerSDKBlueprint, Display, TEXT("UIApplicationWillEnterForegroundNotification"));
-                    [[AppsFlyerLib shared] start];
-                }];
+        if (!observer) {
+            observer = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillEnterForegroundNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+                UE_LOG(LogAppsFlyerSDKBlueprint, Display, TEXT("UIApplicationWillEnterForegroundNotification"));
+                [[AppsFlyerLib shared] start];
+            }];
+        }
     });
 #endif
 }

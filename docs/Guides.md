@@ -12,7 +12,7 @@
 - [Uninstall tracking](#uninstall)
     - [iOS Uninstall](#iOSUninstall)
     - [Android Uninstall](#androidUninstall)
-[Set Additional Data](/docs/Guides.md#setAdditionalData)
+- [Set Additional Data](#setAdditionalData)
 - [DeepLinking](#deeplinking)
     - [Deferred Deep Linking (Get Conversion Data)](#deferred-deep-linking)
     - [Direct Deeplinking](#handle-deeplinking)
@@ -32,16 +32,16 @@
 
 * **Disable SKAdNetwork(Only iOS)** - Disable SKAdNetwork sessions
 
-* **Enable AppsFlyerSDK automatic start** - When set to true, the SDK will be sending a session automatically (before Blueprint events). If set to false, it's the developer responsability to call the start API from the Blueprint.
+* **Automatically start the AppsFlyer SDK** - When set to true, the SDK will be sending a session automatically (before Blueprint events). If set to false, it's the developer responsability to call the start API from the Blueprint.
 
 ##  <a id="start"> Start
 
-Starts the SDK by sending the session to the server.
+* Starts the SDK by sending the session to the server.
 
-As a default, the start method is being called automatically once the app is being launch.
-If needed, this setting can be disabled in the Plugin settings, and the developer can call the start method under the blueprint.
+* As a default, the start method is being called automatically once the app is being launch.
 
-<img src="./ScreenShots/startManually.png"  width="400">
+* If needed, this setting can be disabled in the Plugin settings, and the developer can call the start method under the blueprint. When doing so, the SDK will send a session on every background-foreground transition.
+<img src="./ScreenShots/autoStartOff.png"  width="400">
 
 ##  <a id="inappevent"> Log Event
     
@@ -71,9 +71,8 @@ Setting your own Custom ID enables you to cross-reference your own unique ID wit
 
 **IMPORTANT**: In order for the user ID to be define in the first SDK session, please follow these steps:
 
-1. Set the `Enable AppsFlyerSDK automatic start` flag under the plugin setting to false.
-
-<img src="./ScreenShots/disableAutoStart.png"  width="500">
+1. Set the `Automatically start the AppsFlyer SDK` flag under the plugin setting to false.
+<img src="./ScreenShots/autoStartOff.png"  width="500">
 
 2. Call the `Set Custom User ID` API before the call to the `Start` API under the Blueprint:
 
@@ -90,7 +89,6 @@ First, make sure to read the relevant information regarding [uninstall feature i
 1.  To support remote notification in IOS follow the [official unreal docs](https://docs.unrealengine.com/4.27/en-US/SharingAndReleasing/Mobile/LocalNotifications).
 
 Don't forget to [download, compile and run Unreal Engine from the source](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/DownloadingSourceCode) .
-
 <img src="./ScreenShots/buildingFromSource.png"  width="1100">
 
 Find more information in the 
@@ -98,17 +96,14 @@ Find more information in the
 
 
 2. After the Unreal engine is running, open the Unreal IDE and go to settings > platforms -> iOS -> enable the remote notification support checkbox.
-
 <img src="./ScreenShots/iOSenableRemoteNotification.png"  width="1100">
 
 
 3. Under the setting -> Maps & Mods -> Game instance -> change the instance class to PlatformGameInstance
-
 <img src="./ScreenShots/gameInstance.png"  width="1100">
 
 
 4. Configure the nodes under the relevant blueprint:
-
 <img src="./ScreenShots/nodeEvents.png"  width="1100">
 
 - **Register for remote notification** Will show a pop-up to the user from the OS, asking permission for remote notification
@@ -147,7 +142,6 @@ For Android make sure to complete the steps in the [following article](https://s
 ```
 
 4. Same nodes could be used (as in iOS) for Android under the relevant blueprint (no API call needed).
-
  <img src="./ScreenShots/nodeEvents.png"  width="1100">
 
 
@@ -160,12 +154,10 @@ Use to add custom key-value pairs to the payload of each event, including instal
 
 **IMPORTANT** In order for the additional data to be included in the first SDK session, please follow these steps: 
 
-1. Set the `Enable AppsFlyerSDK automatic start` under the plugin setting to false.
-
-<img src="./ScreenShots/disableAutoStart.png"  width="500">
+1. Set the `Automatically start the AppsFlyer SDK` under the plugin setting to false.
+<img src="./ScreenShots/autoStartOff.png"  width="500">
 
 2. Call the `setAdditionalData` API before the call to the `Start` API:
-
 <img src="./ScreenShots/setAdditionalDataBeforeStart.png"  width="500">
 
 ##  <a id="deeplinking"> Deep Linking
