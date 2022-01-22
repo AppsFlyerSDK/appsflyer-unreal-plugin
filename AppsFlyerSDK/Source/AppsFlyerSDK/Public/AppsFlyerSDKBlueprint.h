@@ -44,4 +44,13 @@ class APPSFLYERSDK_API UAppsFlyerSDKBlueprint : public UBlueprintFunctionLibrary
 	 */
 	UFUNCTION(BlueprintCallable, Category = AppsFlyerSDK, DisplayName = "AppsFlyerSDK wait for user authorization")
 	static void waitForATTUserAuthorizationWithTimeoutInterval(int timeoutInterval);
+
+
+    UFUNCTION(BlueprintCallable, Category = AppsFlyerSDK, DisplayName = "Set AppsFlyerSDK Remote Notifications Token")
+    static void setRemoteNotificationsToken(const TArray<uint8>& token);
+
+
+	UFUNCTION(BlueprintCallable, Category = AppsFlyerSDK, DisplayName = "AppsFlyerSDK add custom data to events in the payload")
+    static void setAdditionalData(TMap <FString, FString> customData);
+
 };

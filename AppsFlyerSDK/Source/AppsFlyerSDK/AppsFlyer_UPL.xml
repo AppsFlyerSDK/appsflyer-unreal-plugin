@@ -6,7 +6,7 @@
             }
             dependencies {
                 implementation 'com.android.installreferrer:installreferrer:1.0'
-                implementation 'com.appsflyer:af-android-sdk:6.4.0'
+                implementation 'com.appsflyer:af-android-sdk:6.4.3'
             }
         </insert>
     </buildGradleAdditions>
@@ -61,6 +61,9 @@
                 return AppsFlyerLib.getInstance().getAppsFlyerUID(this);
             }
 
+            public void afSetAdditionalData(Map&lt;String, Object&gt; customData) {
+                AppsFlyerLib.getInstance().setAdditionalData(customData);
+            }
         </insert>
     </gameActivityClassAdditions>
 </root>

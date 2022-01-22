@@ -37,4 +37,8 @@ public:
     // Disable SKAdNetwork
     UPROPERTY(Config, EditAnywhere, config, Category = "AppsFlyer", meta = (DisplayName = "Disable SKAdNetwork(Only iOS)"))
     bool bDisableSKAdNetwork;
+
+     // Enable AppsFlyerSDK automatic start
+    UPROPERTY(Config, EditAnywhere, config, Category = "AppsFlyer", meta = (DisplayName = "Automatically start the AppsFlyer SDK"))
+    bool bEnableAutoStart;
 };
