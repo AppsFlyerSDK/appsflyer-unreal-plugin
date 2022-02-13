@@ -58,6 +58,8 @@ extern "C" {
             
             const char* c_string_value = env->GetStringUTFChars(strValue, 0);
             map.Add(c_string_key, c_string_value);
+            (env)->ReleaseStringUTFChars(objKey, c_string_key);
+            (env)->ReleaseStringUTFChars(strValue, c_string_value);
         }
         // Java map to UE4 map
         conversionData.InstallData = map;
@@ -72,6 +74,7 @@ extern "C" {
         for (TObjectIterator<UAppsFlyerSDKCallbacks> Itr; Itr; ++Itr) {
             Itr->OnConversionDataRequestFailure.Broadcast(convertedValue);
         }
+        (env)->ReleaseStringUTFChars(stringError, convertedValue);
     }
     JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onAppOpenAttributionNative
     (JNIEnv *env, jobject obj, jobject attributionObject) {}
