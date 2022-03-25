@@ -252,8 +252,10 @@ void UAppsFlyerSDKBlueprint::logEvent(FString eventName, TMap <FString, FString>
         // Transform `af_revenue` value to NSNumber in case if value of NSString type
         id revenueString = dictionary[@"af_revenue"];
         if (revenueString && [revenueString isKindOfClass:[NSString class]]) {
+            NSLocale *locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
             NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
             formatter.numberStyle = NSNumberFormatterDecimalStyle;
+            formatter.locale = locale;
             NSNumber *revenueNumber = [formatter numberFromString:revenueString];
             dictionary[@"af_revenue"] = revenueNumber;
         }
@@ -261,7 +263,7 @@ void UAppsFlyerSDKBlueprint::logEvent(FString eventName, TMap <FString, FString>
         [[AppsFlyerLib shared] logEvent:eventName.GetNSString() withValues:dictionary];
     });
 #endif
-    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("logEvent raised"));
+    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("logEvent raised"));
 }
 
 FString UAppsFlyerSDKBlueprint::getAppsFlyerUID() {
