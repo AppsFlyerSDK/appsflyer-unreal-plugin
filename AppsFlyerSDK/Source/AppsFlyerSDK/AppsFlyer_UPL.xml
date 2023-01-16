@@ -8,6 +8,12 @@
                 implementation 'com.android.installreferrer:installreferrer:1.0'
                 implementation 'com.appsflyer:af-android-sdk:6.9.1'
             }
+            android {
+                compileOptions {
+                    sourceCompatibility 1.8
+                    targetCompatibility 1.8
+                }
+            }
         </insert>
     </buildGradleAdditions>
         <!--  optional app build.gradle additions -->
