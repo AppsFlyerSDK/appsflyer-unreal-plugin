@@ -7,6 +7,7 @@
 UAppsFlyerSDKSettings::UAppsFlyerSDKSettings(const FObjectInitializer& ObjectInitializer)
     : Super(ObjectInitializer)
     , appsFlyerDevKey("")
+    , appsFlyerDevKeyIOS("")
     , appleAppID("")
     , bIsDebug(false)
     , currencyCode("")

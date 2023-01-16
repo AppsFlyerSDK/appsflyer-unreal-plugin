@@ -145,9 +145,12 @@ void UAppsFlyerSDKBlueprint::configure()
 
 #elif PLATFORM_IOS
     dispatch_async(dispatch_get_main_queue(), ^ {
-        if (!defaultSettings->appsFlyerDevKey.IsEmpty() && !defaultSettings->appleAppID.IsEmpty()) {
+        if ((!defaultSettings->appsFlyerDevKeyIOS.IsEmpty() || !defaultSettings->appsFlyerDevKey.IsEmpty()) && !defaultSettings->appleAppID.IsEmpty()) {
             [AppsFlyerLib shared].disableSKAdNetwork = defaultSettings->bDisableSKAdNetwork;
-            [AppsFlyerLib shared].appsFlyerDevKey = defaultSettings->appsFlyerDevKey.GetNSString();
+            
+            [AppsFlyerLib shared].appsFlyerDevKey = defaultSettings->appsFlyerDevKeyIOS.IsEmpty() ?
+                defaultSettings->appsFlyerDevKey.GetNSString() : defaultSettings->appsFlyerDevKeyIOS.GetNSString();
+            
             [AppsFlyerLib shared].appleAppID = defaultSettings->appleAppID.GetNSString();
             [AppsFlyerLib shared].isDebug = isDebug;
             // Set currency code if value not `empty`
