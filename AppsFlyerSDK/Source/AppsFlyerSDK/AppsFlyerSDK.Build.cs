@@ -12,11 +12,10 @@ public class AppsFlyerSDK : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		MinFilesUsingPrecompiledHeaderOverride = 1;
-		bFasterWithoutUnity = true;
 
 		PrivateIncludePaths.Add("AppsFlyerSDK/Private");
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Engine", "Core", "CoreUObject" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Engine", "Core", "CoreUObject", "Projects" });
 		PrivateIncludePathModuleNames.AddRange(new string[] { "Settings" });
 
 		if (Target.Platform == UnrealTargetPlatform.IOS)

@@ -1,10 +1,10 @@
-<img src="./docs/ScreenShots/unrealLogo.png"  width="400">
+<img src="./docs/ScreenShots/ue_logo.png"  width="400">
 
 
 
 # Unreal AppsFlyer Plugin
 
-v6.9.1
+v6.10.1
 
 🛠 In order for us to provide optimal support, we would kindly ask you to submit any issues to support@appsflyer.com
 

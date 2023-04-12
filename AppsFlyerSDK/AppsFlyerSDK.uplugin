@@ -1,9 +1,9 @@
 {
 	"FileVersion": 3,
 	"Version": 2,
-	"VersionName": "6.1.4",
+	"VersionName": "6.10.1",
 	"FriendlyName": "AppsFlyerSDK",
-	"Description": "UE4 AppsFlyer plugin",
+	"Description": "UE4/UE5 AppsFlyer Plugin",
 	"Category": "Misc",
 	"CreatedBy": "Andrii Hahan",
 	"CreatedByURL": "",
