@@ -35,6 +35,7 @@ void FAppsFlyerSDK::StartupModule()
                                  LOCTEXT("RuntimeSettingsName", "AppsFlyer SDK"),
                                  LOCTEXT("RuntimeSettingsDescription", "Configure bundle(plugin)"),
                         GetMutableDefault<UAppsFlyerSDKSettings>());
+        UE_LOG(LogAppsFlyerSDK, Display, TEXT("[StartupModule][RegisterSettings] Done"));
     }
 
 #if PLATFORM_ANDROID || PLATFORM_IOS
