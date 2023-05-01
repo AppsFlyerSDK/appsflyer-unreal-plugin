@@ -1,3 +1,16 @@
+---
+title: Unreal Mobile Plugin
+category: 6446526dddf659006c7ea807
+order: 8
+hidden: true
+slug: unreal-plugin
+---
+
+> Link to repository
+> [GitHub](https://github.com/AppsFlyerSDK/appsflyer-unreal-plugin)
+
+
+
 <img src="./docs/ScreenShots/ue_logo.png"  width="400">
 
 
