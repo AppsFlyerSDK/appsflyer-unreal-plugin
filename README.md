@@ -38,7 +38,7 @@ v6.10.1
 - iOS AppsFlyerSDK **v6.10.1**
 - Android AppsFlyerSDK **v6.9.1**
 
-## <a id="installation">📲Installation</a>
+## <a id="installation">📲 Installation</a>
 
 - In your game’s root directory, create a folder named Plugins
 - Copy the AppsFlyer folder into it. You should have something like
