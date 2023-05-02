@@ -19,7 +19,7 @@ v6.10.1
 
 ## Table of contents
 
-- [SDK versions](#plugin-is-built-for)
+- [SDK versions](#plugin-built-for)
 - [Installation](#installation)
 - [Setup](#setup)
 - [Guides & API](/docs/Guides.md)
