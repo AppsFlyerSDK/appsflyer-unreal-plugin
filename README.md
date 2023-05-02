@@ -11,7 +11,7 @@ slug: unreal-plugin
 
 
 
-<img src="./docs/ScreenShots/ue_logo.png"  width="400">
+<img src="https://files.readme.io/fe4e906-small-ue_logo.png"  width="400">
 
 
 
@@ -59,7 +59,7 @@ v6.10.1
 
 First open Settings > Project Setting... and locate AppsFlyer under the Plugins section.
 
-<img src="./docs/ScreenShots/ProjectSettings1.png"  width="700">
+<img src="https://files.readme.io/68c6fc7-small-ProjectSettings1.png"  width="700">
 
 
 ####  Set your App_ID (iOS only), Dev_Key and enable AppsFlyer to detect installations, sessions (app opens) and updates.  
@@ -68,13 +68,13 @@ First open Settings > Project Setting... and locate AppsFlyer under the Plugins 
 **Apple App ID**  - ***For iOS only.*** Your iTunes Application ID.<br>
 **Is Debug** - When enabled the AppsFlyer SDK debug logs will be printed (development only!)
 
-<img src="./docs/ScreenShots/ProjectSettings2.png"  width="1100">
+<img src="https://files.readme.io/5a806fc-small-ProjectSettings2.png"  width="1100">
 
 Once your dev key and app_id is set you are ready to use AppsFlyer! 
 
 You will also need to make sure your package name is set up with an AppsFlyer dashboard.
 
-<img src="./docs/ScreenShots/PackageName.png"  width="700">
+<img src="https://files.readme.io/cb4b8dc-small-PackageName.png"  width="700">
 
 
 ## <a id="demo"> 📱 Demo
