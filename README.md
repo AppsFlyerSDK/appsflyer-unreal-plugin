@@ -38,13 +38,13 @@ v6.10.1
 - [Demo](#demo)  
 
 
-### <a id="plugin-build-for"> This plugin is built for
+### <a id="plugin-build-for"> This plugin is built for</a>
 
 - iOS AppsFlyerSDK **v6.10.1**
 - Android AppsFlyerSDK **v6.9.1**
 
 
-## <a id="installation">📲Installation
+## <a id="installation">📲Installation</a>
 
 * In your game’s root directory, create a folder named Plugins
 * Copy the AppsFlyer folder into it. You should have something like
@@ -55,7 +55,7 @@ v6.10.1
               └── AppsFlyerSDK.uplugin
 ```
 
-## <a id="setup"> 🚀 Setup
+## <a id="setup"> 🚀 Setup</a>
 
 First open Settings > Project Setting... and locate AppsFlyer under the Plugins section.
 
