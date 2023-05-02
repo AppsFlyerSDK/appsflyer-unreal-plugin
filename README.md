@@ -1,5 +1,5 @@
 ---
-title: Unreal Mobile Plugin
+title: Unreal mobile plugin
 category: 6446526dddf659006c7ea807
 order: 8
 hidden: true
@@ -15,15 +15,13 @@ slug: unreal-plugin
 
 
 
-# Unreal AppsFlyer Plugin
+# Unreal AppsFlyer plugin
 
 v6.10.1
 
-🛠 In order for us to provide optimal support, we would kindly ask you to submit any issues to support@appsflyer.com
+🛠 In order for us to provide optimal support, please submit any issues to support@appsflyer.com. When submitting an issue please specify your AppsFlyer sign-up (account) email , your app ID , reproduction steps, code snippets, logs, and any additional relevant information.
 
-*When submitting an issue please specify your AppsFlyer sign-up (account) email , your app ID , reproduction steps, code snippets, logs, and any additional relevant information.*
-
-## Table of content
+## Table of contents
 
 - [SDK versions](#plugin-build-for)
 - [Installation](#installation)
@@ -74,7 +72,7 @@ First open Settings > Project Setting... and locate AppsFlyer under the Plugins 
 
 Once your dev key and app_id is set you are ready to use AppsFlyer! 
 
-You will also need to make sure your package name is set up with a AppsFlyer Dashboard.
+You will also need to make sure your package name is set up with an AppsFlyer dashboard.
 
 <img src="./docs/ScreenShots/PackageName.png"  width="700">
 
