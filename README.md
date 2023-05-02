@@ -19,9 +19,9 @@ v6.10.1
 
 ## Table of contents
 
-- [SDK versions](#this-plugin-is-built-for)
-- [Installation](#📲installation)
-- [Setup](#🚀-setup)
+- [SDK versions](#plugin-is-built-for)
+- [Installation](#installation)
+- [Setup](#setup)
 - [Guides & API](/docs/Guides.md)
   - [Init SDK](/docs/Guides.md#init-sdk)
   - [Start](/docs/Guides.md#start)
@@ -31,14 +31,14 @@ v6.10.1
   - [Uninstall tracking](/docs/Guides.md#uninstall)
   - [Set Additional Data](/docs/Guides.md#setAdditionalData)
   - [DeepLinking](/docs/Guides.md#deeplinking)
-- [Demo](#📱-demo)
+- [Demo](#demo)
 
-### This plugin is built for
+### <a id="plugin-built-for"> This plugin is built for</a>
 
 - iOS AppsFlyerSDK **v6.10.1**
 - Android AppsFlyerSDK **v6.9.1**
 
-## 📲Installation
+## <a id="installation">📲Installation</a>
 
 - In your game’s root directory, create a folder named Plugins
 - Copy the AppsFlyer folder into it. You should have something like
@@ -50,7 +50,7 @@ v6.10.1
               └── AppsFlyerSDK.uplugin
 ```
 
-## 🚀 Setup
+## <a id="setup"> 🚀 Setup</a>
 
 First open Settings > Project Setting... and locate AppsFlyer under the Plugins section.
 
@@ -71,6 +71,6 @@ You will also need to make sure your package name is set up with an AppsFlyer da
 
 <img src="https://files.readme.io/cb4b8dc-small-PackageName.png"  width="700">
 
-## 📱 Demo
+## <a id="demo">📱 Demo</a>
 
 Check out the demo for this project [here](https://github.com/AppsFlyerSDK/appsflyer-unreal-plugin/tree/master/Demo).
