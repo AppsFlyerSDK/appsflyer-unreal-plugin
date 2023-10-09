@@ -9,8 +9,8 @@ slug: ue-installation
 
 # Installation
 
-* In your game’s root directory, create a folder named Plugins
-* Copy the AppsFlyer folder into it. You should have something like
+1. In your game’s root directory, create the **Plugins** directory
+2. Copy the **AppsFlyer** folder into the **Plugins** dirrectory to create the following file hierarchy:
 
 ```
   MyProject
