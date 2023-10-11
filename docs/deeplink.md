@@ -19,19 +19,24 @@ Since users may or may not have the mobile app installed, there are 2 types of d
 - Direct Deep Linking - Directly serving personalized content to existing users, which already have the mobile app installed.
 
 For more info please check out the [OneLink™ Deep Linking Guide](https://support.appsflyer.com/hc/en-us/articles/208874366-OneLink-Deep-Linking-Guide#Intro).
-
-The set up for deferred deep linking and direct deeplinking is the same for UE4:
-
-1. Create a new Actor object.
-
-   ![](https://files.readme.io/83370fb-AddNewActor.png)
-
-2. Click **Add Component** and the **AppsFlyer SDKCallback** Component.  
-   
-   ![](https://files.readme.io/698d455-AddComponent.png)
-3. Add the required callbacks.  
    
    ![](https://files.readme.io/e0f07bc-AddMethodsGCD.png)
+
+The set up for _deferred deep linking_ and _direct deeplinking_ is the same for UE4:
+
+1. Create a new _Actor_ object.
+
+      <img src="https://files.readme.io/83370fb-AddNewActor.png"  width="400"/>
+
+2. Click _Add Component_ and and the **AppsFlyer SDKCallback** Component. 
+ 
+   <img src="https://files.readme.io/698d455-AddComponent.png"  width="400"/>
+
+3. You can now add the required callbacks.
+  
+   <img src="https://files.readme.io/e0f07bc-AddMethodsGCD.png"  width="900"/>
+
+Now you are ready to implement Deeplinking!
 
 ### Deferred deep linking
 
