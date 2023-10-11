@@ -6,6 +6,17 @@ order: 9
 hidden: true
 slug: ue-api
 ---
+## [Table of content](https://github.com/AppsFlyerSDK/appsflyer-unreal-plugin/blob/master/docs/API.md#table-of-content)
+
+- [Init SDK](https://github.com/AppsFlyerSDK/appsflyer-unreal-plugin/blob/master/docs/API.md#init-sdk)
+- [Start](https://github.com/AppsFlyerSDK/appsflyer-unreal-plugin/blob/master/docs/API.md#start)
+- [Log Event](https://github.com/AppsFlyerSDK/appsflyer-unreal-plugin/blob/master/docs/API.md#log-event)
+- [Get AppsFlyerUID](https://github.com/AppsFlyerSDK/appsflyer-unreal-plugin/blob/master/docs/API.md#get-appsflyeruid)
+- [Set Custom User Id](https://github.com/AppsFlyerSDK/appsflyer-unreal-plugin/blob/master/docs/API.md#set-custom-user-id)
+- [Uninstall tracking](https://github.com/AppsFlyerSDK/appsflyer-unreal-plugin/blob/master/docs/API.md#uninstall)
+    - [iOS Uninstall](https://github.com/AppsFlyerSDK/appsflyer-unreal-plugin/blob/master/docs/API.md#ios-uninstall)
+    - [Android Uninstall](https://github.com/AppsFlyerSDK/appsflyer-unreal-plugin/blob/master/docs/API.md#android-uninstall)
+- [Set Additional Data](https://github.com/AppsFlyerSDK/appsflyer-unreal-plugin/blob/master/docs/API.md#set-additional-data)
 
 ## Init SDK
 
