@@ -18,7 +18,7 @@
 #include "Android/AndroidApplication.h"
 #elif PLATFORM_IOS
 #import <AppsFlyerLib/AppsFlyerLib.h>
-#import "UE4AFSDKDelegate.h"
+#import "IOS/UE4AFSDKDelegate.h"
 #include "IOSAppDelegate.h"
 #import <objc/message.h>
 
@@ -151,10 +151,18 @@ void UAppsFlyerSDKBlueprint::configure()
     const bool isDebug = defaultSettings->bIsDebug; 
     const bool isAutoStart = defaultSettings->bEnableAutoStart; 
 #if PLATFORM_ANDROID
-    if(isAutoStart){
-        JNIEnv* env = FAndroidApplication::GetJavaEnv();
-        jmethodID appsflyer =
-            FJavaWrapper::FindMethod(env, FJavaWrapper::GameActivityClassID, "afStart", "(Ljava/lang/String;Z)V", false);
+    JNIEnv* env = FAndroidApplication::GetJavaEnv();
+    
+    jmethodID PluginMethodID = FJavaWrapper::FindMethod(env, FJavaWrapper::GameActivityClassID, "afSetPluginInfo", "(Ljava/lang/String;Ljava/lang/String;)V", false);
+    jstring jVersionName = env->NewStringUTF(TCHAR_TO_UTF8(*VersionName));
+    jstring jEngineVersion = env->NewStringUTF(TCHAR_TO_UTF8(*EngineVersion));
+    FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, PluginMethodID, jVersionName, jEngineVersion);
+    env->DeleteLocalRef(jVersionName);
+    env->DeleteLocalRef(jEngineVersion);
+    
+    if (isAutoStart)
+    {
+        jmethodID appsflyer = FJavaWrapper::FindMethod(env, FJavaWrapper::GameActivityClassID, "afStart", "(Ljava/lang/String;Z)V", false);
         jstring key = env->NewStringUTF(TCHAR_TO_UTF8(*defaultSettings->appsFlyerDevKey));
 
         FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, appsflyer, key, isDebug);

@@ -5,8 +5,8 @@
                 mavenCentral()
             }
             dependencies {
-                implementation 'com.android.installreferrer:installreferrer:1.0'
-                implementation 'com.appsflyer:af-android-sdk:6.9.1'
+                implementation 'com.android.installreferrer:installreferrer:2.1'
+                implementation 'com.appsflyer:af-android-sdk:6.12.2'
             }
             android {
                 compileOptions {
@@ -37,6 +37,10 @@
         <insert>
             import android.app.Application;
             import com.appsflyer.*;
+            import com.appsflyer.internal.platform_extension.Plugin;
+            import com.appsflyer.internal.platform_extension.PluginInfo;
+            import java.util.HashMap;
+            import java.util.Map;
         </insert>
     </gameActivityImportAdditions>
     <gameActivityClassAdditions>
@@ -70,6 +74,18 @@
             public void afSetAdditionalData(Map&lt;String, Object&gt; customData) {
                 AppsFlyerLib.getInstance().setAdditionalData(customData);
             }
+
+            public void afSetPluginInfo(String pluginVersion, String engineVersion) {
+                
+
+                Map&lt;String, String&gt; additionalData = new HashMap&lt;String,String&gt;();
+                additionalData.put("engine_version", engineVersion);
+
+                PluginInfo pluginInfo = new PluginInfo(Plugin.UNREAL, pluginVersion, additionalData);
+                AppsFlyerLib.getInstance().setPluginInfo(pluginInfo);   
+                
+            }
+
         </insert>
     </gameActivityClassAdditions>
 </root>
