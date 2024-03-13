@@ -69,7 +69,10 @@ extern "C" {
         // Java map to UE4 map
         conversionData.InstallData = map;
         for (TObjectIterator<UAppsFlyerSDKCallbacks> Itr; Itr; ++Itr) {
-            Itr->OnConversionDataReceived.Broadcast(conversionData);
+            if (*Itr && !Itr->IsPendingKill())
+            {
+                Itr->OnConversionDataReceived.Broadcast(conversionData);
+            }
         }
     }
     JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInstallConversionFailureNative
@@ -77,7 +80,10 @@ extern "C" {
         jboolean isCopy;
         const char *convertedValue = (env)->GetStringUTFChars(stringError, &isCopy);
         for (TObjectIterator<UAppsFlyerSDKCallbacks> Itr; Itr; ++Itr) {
-            Itr->OnConversionDataRequestFailure.Broadcast(convertedValue);
+            if (*Itr && !Itr->IsPendingKill())
+            {
+                Itr->OnConversionDataRequestFailure.Broadcast(convertedValue);
+            }
         }
         (env)->ReleaseStringUTFChars(stringError, convertedValue);
     }
@@ -107,7 +113,10 @@ static void onConversionDataSuccess(NSDictionary *installData) {
     }
     conversionData.InstallData = map;
     for (TObjectIterator<UAppsFlyerSDKCallbacks> Itr; Itr; ++Itr) {
-        Itr->OnConversionDataReceived.Broadcast(conversionData);
+        if (*Itr && !Itr->IsPendingKill())
+        {
+            Itr->OnConversionDataReceived.Broadcast(conversionData);
+        }
     }
 }
 static void onConversionDataFail(NSString *error) {
@@ -124,7 +133,10 @@ static void onAppOpenAttribution(NSDictionary *attributionData) {
     }
     conversionData.InstallData = map;
     for (TObjectIterator<UAppsFlyerSDKCallbacks> Itr; Itr; ++Itr) {
-        Itr->OnConversionDataReceived.Broadcast(conversionData);
+        if (*Itr && !Itr->IsPendingKill())
+        {
+            Itr->OnConversionDataReceived.Broadcast(conversionData);
+        }
     }
 }
 static void onAppOpenAttributionFailure(NSString *error) {
