@@ -77,3 +77,12 @@ Plugins/*/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+/Saved
+/Demo (IOS).xcworkspace
+/Content
+/DerivedDataCache
+/Demo (Mac).xcworkspace
+/.vscode
+/Intermediate
+/Plugins/AppsFlyerSDK/Intermediate

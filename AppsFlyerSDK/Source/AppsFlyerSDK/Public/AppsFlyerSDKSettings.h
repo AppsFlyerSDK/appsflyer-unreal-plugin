@@ -41,4 +41,7 @@ public:
      // Enable AppsFlyerSDK automatic start
     UPROPERTY(Config, EditAnywhere, config, Category = "AppsFlyer", meta = (DisplayName = "Automatically start the AppsFlyer SDK"))
     bool bEnableAutoStart;
+
+    UPROPERTY(Config, EditAnywhere, config, Category = "AppsFlyer", meta = (DisplayName = "Instruct the SDK to collect the TCF data from the device"))
+    bool bEnableTCFDataCollection;
 };
