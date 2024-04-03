@@ -13,6 +13,7 @@
 // Core
 #include "Misc/EngineVersion.h"
 
+
 #if PLATFORM_ANDROID
 #include "Android/AndroidJNI.h"
 #include "Android/AndroidApplication.h"
@@ -150,6 +151,8 @@ void UAppsFlyerSDKBlueprint::configure()
     const UAppsFlyerSDKSettings *defaultSettings = GetDefault<UAppsFlyerSDKSettings>();
     const bool isDebug = defaultSettings->bIsDebug; 
     const bool isAutoStart = defaultSettings->bEnableAutoStart; 
+    const bool isTCFDataCollectionEnabled = defaultSettings->bEnableTCFDataCollection;   
+
 #if PLATFORM_ANDROID
     JNIEnv* env = FAndroidApplication::GetJavaEnv();
     
@@ -167,6 +170,13 @@ void UAppsFlyerSDKBlueprint::configure()
 
         FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, appsflyer, key, isDebug);
     }
+
+    if (isTCFDataCollectionEnabled)
+    {
+        jmethodID UPLMethod = FJavaWrapper::FindMethod(env, FJavaWrapper::GameActivityClassID, "afEnableTCFDataCollection", "(Z)V", false);
+        FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, UPLMethod, true);
+    }
+
 
 #elif PLATFORM_IOS
     dispatch_async(dispatch_get_main_queue(), ^ {
@@ -187,6 +197,10 @@ void UAppsFlyerSDKBlueprint::configure()
             NSString *currencyCode = defaultSettings->currencyCode.GetNSString();
             if (!AppsFlyerIsEmptyValue(currencyCode)) {
                 [AppsFlyerLib shared].currencyCode = currencyCode;   
+            }
+
+            if (isTCFDataCollectionEnabled) {
+                [[AppsFlyerLib shared] enableTCFDataCollection:YES];
             }
 
             FIOSCoreDelegates::OnOpenURL.AddStatic(&OnOpenURL);
@@ -385,6 +399,35 @@ void UAppsFlyerSDKBlueprint::setAdditionalData(TMap <FString, FString> customDat
         }
         [[AppsFlyerLib shared] setAdditionalData:dictionary];
     });
+#else
+    return;
+#endif
+}
+
+void UAppsFlyerSDKBlueprint::SetConsentForNonGDPRUser() 
+{
+#if PLATFORM_ANDROID
+    JNIEnv* env = FAndroidApplication::GetJavaEnv();
+    jmethodID UPLMethod1 = FJavaWrapper::FindMethod(env, FJavaWrapper::GameActivityClassID, "afSetConsentData", "(ZZZ)V", false);
+    FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, UPLMethod1, false, false, false);
+#elif PLATFORM_IOS    
+    AppsFlyerConsent *consent = [[AppsFlyerConsent alloc] initNonGDPRUser];
+    [[AppsFlyerLib shared] setConsentData:consent];
+#else
+    return;
+#endif
+}
+
+void UAppsFlyerSDKBlueprint::SetConsentForGDPRUser(bool hasConsentForDataUsage, bool hasConsentForAdsPersonalization)
+{
+#if PLATFORM_ANDROID
+    JNIEnv* env = FAndroidApplication::GetJavaEnv(); 
+    jmethodID UPLMethod = FJavaWrapper::FindMethod(env, FJavaWrapper::GameActivityClassID, "afSetConsentData", "(ZZZ)V", false);
+    FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, UPLMethod, true, hasConsentForDataUsage, hasConsentForAdsPersonalization);
+#elif PLATFORM_IOS
+    AppsFlyerConsent *consent = [[AppsFlyerConsent alloc] initForGDPRUserWithHasConsentForDataUsage:hasConsentForDataUsage
+                                                                    hasConsentForAdsPersonalization:hasConsentForAdsPersonalization];
+    [[AppsFlyerLib shared] setConsentData:consent];
 #else
     return;
 #endif
