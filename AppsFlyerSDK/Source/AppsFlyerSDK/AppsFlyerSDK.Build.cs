@@ -38,12 +38,16 @@ public class AppsFlyerSDK : ModuleRules
 				"CFNetwork"
 			}
 			);
+
+			//UPL
+			string PluginPath = Utils.MakePathRelativeTo(ModuleDirectory, Target.RelativeEnginePath);
+			AdditionalPropertiesForReceipt.Add("IOSPlugin", Path.Combine(PluginPath, "AppsFlyer_UPL_IOS.xml"));
 		}
 		else if (Target.Platform == UnrealTargetPlatform.Android)
 		{
 			// Unreal Plugin Language
 			string PluginPath = Utils.MakePathRelativeTo(ModuleDirectory, Target.RelativeEnginePath);
-			AdditionalPropertiesForReceipt.Add("AndroidPlugin", System.IO.Path.Combine(PluginPath, "AppsFlyer_UPL.xml"));
+			AdditionalPropertiesForReceipt.Add("AndroidPlugin", System.IO.Path.Combine(PluginPath, "AppsFlyer_UPL_Android.xml"));
 			// JNI
 			PublicIncludePathModuleNames.Add("Launch");
 		}

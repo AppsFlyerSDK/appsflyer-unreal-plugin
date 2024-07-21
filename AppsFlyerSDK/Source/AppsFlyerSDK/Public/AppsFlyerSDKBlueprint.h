@@ -53,4 +53,9 @@ class APPSFLYERSDK_API UAppsFlyerSDKBlueprint : public UBlueprintFunctionLibrary
 	UFUNCTION(BlueprintCallable, Category = AppsFlyerSDK, DisplayName = "AppsFlyerSDK add custom data to events in the payload")
     static void setAdditionalData(TMap <FString, FString> customData);
 
+	UFUNCTION(BlueprintCallable, Category = AppsFlyerSDK, DisplayName = "AppsFlyerConsent For *Non GDPR* User")
+    static void SetConsentForNonGDPRUser();
+
+	UFUNCTION(BlueprintCallable, Category = AppsFlyerSDK, DisplayName = "AppsFlyerConsent For *GDPR* User")
+    static void SetConsentForGDPRUser(bool hasConsentForDataUsage, bool hasConsentForAdsPersonalization);
 };

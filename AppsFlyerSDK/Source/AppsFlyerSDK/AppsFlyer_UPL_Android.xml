@@ -1,0 +1,103 @@
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+    <buildGradleAdditions>
+        <insert>
+            repositories {
+                mavenCentral()
+            }
+            dependencies {
+                implementation 'com.android.installreferrer:installreferrer:2.2'
+                implementation 'com.appsflyer:af-android-sdk:6.14.0'
+            }
+            android {
+                compileOptions {
+                    sourceCompatibility 1.8
+                    targetCompatibility 1.8
+                }
+            }
+        </insert>
+    </buildGradleAdditions>
+        <!--  optional app build.gradle additions -->
+    <buildscriptGradleAdditions>
+    <insert>
+        repositories {
+            mavenCentral()
+        }
+    </insert>
+    </buildscriptGradleAdditions>
+    <gradleProperties>
+        <insert>
+            org.gradle.jvmargs='-Dfile.encoding=UTF-8'
+        </insert>
+    </gradleProperties>
+    <androidManifestUpdates>
+        <addPermission android:name="android.permission.INTERNET" />
+        <addPermission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    </androidManifestUpdates>
+    <gameActivityImportAdditions>
+        <insert>
+            import android.app.Application;
+            import com.appsflyer.*;
+            import com.appsflyer.internal.platform_extension.Plugin;
+            import com.appsflyer.internal.platform_extension.PluginInfo;
+            import java.util.HashMap;
+            import java.util.Map;
+        </insert>
+    </gameActivityImportAdditions>
+    <gameActivityClassAdditions>
+        <insert>
+            private String afKey;
+
+            public void afStart(String key, boolean isDebug) {
+                afKey = key;
+                AppsFlyerLib appsflyer = AppsFlyerLib.getInstance();
+                appsflyer.setDebugLog(isDebug);
+                appsflyer.init(key, new AppsFlyer2dXConversionCallback(), this)
+                        .start(this);
+            }
+
+            public void afSetCustomerUserId(String id) {
+                AppsFlyerLib.getInstance().setCustomerUserId(id);
+            }
+
+            public void afStartLaunch() {
+                AppsFlyerLib.getInstance().start(this, afKey);
+            }
+
+            public void afLogEvent(String eventName, Map&lt;String, Object&gt; eventValues) {
+                AppsFlyerLib.getInstance().logEvent(this, eventName, eventValues);
+            }
+
+            public String afGetAppsFlyerUID() {
+                return AppsFlyerLib.getInstance().getAppsFlyerUID(this);
+            }
+
+            public void afSetAdditionalData(Map&lt;String, Object&gt; customData) {
+                AppsFlyerLib.getInstance().setAdditionalData(customData);
+            }
+
+            public void afSetPluginInfo(String pluginVersion, String engineVersion) {
+                
+                Map&lt;String, String&gt; additionalData = new HashMap&lt;String,String&gt;();
+                additionalData.put("engine_version", engineVersion);
+
+                PluginInfo pluginInfo = new PluginInfo(Plugin.UNREAL, pluginVersion, additionalData);
+                AppsFlyerLib.getInstance().setPluginInfo(pluginInfo);   
+            }
+
+            public void afEnableTCFDataCollection(boolean isTCFDataCollectionEnabled) {
+                AppsFlyerLib.getInstance().enableTCFDataCollection(isTCFDataCollectionEnabled);
+            }
+
+            public void afSetConsentData(boolean isGDPR, boolean hasConsentForDataUsage, boolean hasConsentForAdsPersonalization) {
+                AppsFlyerConsent consent;
+                if (isGDPR == true) {
+                    consent = AppsFlyerConsent.forGDPRUser(hasConsentForDataUsage, hasConsentForAdsPersonalization);
+                } else {
+                    consent = AppsFlyerConsent.forNonGDPRUser();
+                }
+                   
+                AppsFlyerLib.getInstance().setConsentData(consent);
+            }
+        </insert>
+    </gameActivityClassAdditions>
+</root>
