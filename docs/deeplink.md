@@ -40,7 +40,7 @@ Now you are ready to implement Deeplinking!
 
 ### Deferred deep linking
 
-Check out the deferred deeplinkg guide from the AppFlyer knowledge base [here](https://support.appsflyer.com/hc/en-us/articles/207032096-Accessing-AppsFlyer-Attribution-Conversion-Data-from-the-SDK-Deferred-Deeplinking-#Introduction)
+Check out the deferred deeplinkg guide from the AppFlyer knowledge base [here](https://support.appsflyer.com/hc/en-us/articles/208874366-OneLink-links-and-experiences#deep-linking-and-deferred-deep-linking)
 
 Code Sample to handle the conversion data:  
 
