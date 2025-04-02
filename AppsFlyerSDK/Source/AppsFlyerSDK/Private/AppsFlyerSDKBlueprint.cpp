@@ -12,6 +12,7 @@
 #include "Interfaces/IPluginManager.h"
 // Core
 #include "Misc/EngineVersion.h"
+#include "UObject/UObjectIterator.h"
 
 
 #if PLATFORM_ANDROID
@@ -431,4 +432,101 @@ void UAppsFlyerSDKBlueprint::SetConsentForGDPRUser(bool hasConsentForDataUsage, 
 #else
     return;
 #endif
+}
+
+void UAppsFlyerSDKBlueprint::SetConsentData(
+    EAFBooleanState IsUserSubjectToGDPR,
+    EAFBooleanState HasConsentForDataUsage,
+    EAFBooleanState HasConsentForAdsPersonalization,
+    EAFBooleanState HasConsentForAdStorage)
+{
+#if WITH_EDITOR
+    auto EnumToString = [](EAFBooleanState State) -> FString
+    {
+        switch (State)
+        {
+            case EAFBooleanState::ValueTrue:  return TEXT("True");
+            case EAFBooleanState::ValueFalse: return TEXT("False");
+            case EAFBooleanState::ValueUnset:
+            default:                          return TEXT("Unset");
+        }
+    };
+
+    UE_LOG(LogAppsFlyerSDKBlueprint, Display, TEXT("SetConsentData (Editor Test): GDPR=%s, DataUsage=%s, AdsPersonalization=%s, AdStorage=%s"),
+        *EnumToString(IsUserSubjectToGDPR),
+        *EnumToString(HasConsentForDataUsage),
+        *EnumToString(HasConsentForAdsPersonalization),
+        *EnumToString(HasConsentForAdStorage));
+#endif
+
+#if PLATFORM_ANDROID
+    JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+
+    jmethodID UPLMethod = FJavaWrapper::FindMethod(
+        Env,
+        FJavaWrapper::GameActivityClassID,
+        "appsflyer_set_consent_v2",
+        "(Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;)V",
+        false
+    );
+
+    if (UPLMethod == nullptr)
+    {
+        UE_LOG(LogTemp, Error, TEXT("Failed to find method appsflyer_set_consent_v2"));
+        return;
+    }
+
+    jclass BooleanClass = Env->FindClass("java/lang/Boolean");
+    jmethodID BooleanConstructor = Env->GetMethodID(BooleanClass, "<init>", "(Z)V");
+
+    auto MakeJavaBoolean = [&](EAFBooleanState State) -> jobject
+    {
+        switch (State)
+        {
+            case EAFBooleanState::ValueTrue:
+                return Env->NewObject(BooleanClass, BooleanConstructor, JNI_TRUE);
+            case EAFBooleanState::ValueFalse:
+                return Env->NewObject(BooleanClass, BooleanConstructor, JNI_FALSE);
+            case EAFBooleanState::ValueUnset:
+            default:
+                return nullptr;
+        }
+    };
+
+    jobject Arg1 = MakeJavaBoolean(IsUserSubjectToGDPR);
+    jobject Arg2 = MakeJavaBoolean(HasConsentForDataUsage);
+    jobject Arg3 = MakeJavaBoolean(HasConsentForAdsPersonalization);
+    jobject Arg4 = MakeJavaBoolean(HasConsentForAdStorage);
+
+    Env->CallVoidMethod(FJavaWrapper::GameActivityThis, UPLMethod, Arg1, Arg2, Arg3, Arg4);
+
+    if (Arg1) Env->DeleteLocalRef(Arg1);
+    if (Arg2) Env->DeleteLocalRef(Arg2);
+    if (Arg3) Env->DeleteLocalRef(Arg3);
+    if (Arg4) Env->DeleteLocalRef(Arg4);
+    Env->DeleteLocalRef(BooleanClass);
+#endif
+}
+
+void UAppsFlyerSDKBlueprint::SetConsentDataTOptional(
+	TOptional<bool> IsUserSubjectToGDPR,
+	TOptional<bool> HasConsentForDataUsage,
+	TOptional<bool> HasConsentForAdsPersonalization,
+	TOptional<bool> HasConsentForAdStorage)
+{
+	auto Convert = [](TOptional<bool> OptionalFlag) -> EAFBooleanState
+	{
+		if (!OptionalFlag.IsSet())
+		{
+			return EAFBooleanState::ValueUnset;
+		}
+		return OptionalFlag.GetValue() ? EAFBooleanState::ValueTrue : EAFBooleanState::ValueFalse;
+	};
+
+	SetConsentData(
+		Convert(IsUserSubjectToGDPR),
+		Convert(HasConsentForDataUsage),
+		Convert(HasConsentForAdsPersonalization),
+		Convert(HasConsentForAdStorage)
+	);
 }
