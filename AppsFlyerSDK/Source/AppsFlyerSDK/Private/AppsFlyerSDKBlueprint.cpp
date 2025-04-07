@@ -20,6 +20,7 @@
 #include "Android/AndroidApplication.h"
 #elif PLATFORM_IOS
 #import <AppsFlyerLib/AppsFlyerLib.h>
+#import <AppsFlyerLib/AppsFlyerLib-Swift.h>
 #import "IOS/UE4AFSDKDelegate.h"
 #include "IOSAppDelegate.h"
 #import <objc/message.h>
@@ -411,8 +412,8 @@ void UAppsFlyerSDKBlueprint::SetConsentForNonGDPRUser()
     JNIEnv* env = FAndroidApplication::GetJavaEnv();
     jmethodID UPLMethod1 = FJavaWrapper::FindMethod(env, FJavaWrapper::GameActivityClassID, "afSetConsentData", "(ZZZ)V", false);
     FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, UPLMethod1, false, false, false);
-#elif PLATFORM_IOS    
-    AppsFlyerConsent *consent = [[AppsFlyerConsent alloc] initNonGDPRUser];
+#elif PLATFORM_IOS
+    AppsFlyerConsent *consent = [[AppsFlyerConsent alloc] initWithNonGDPRUser];
     [[AppsFlyerLib shared] setConsentData:consent];
 #else
     return;
@@ -505,6 +506,50 @@ void UAppsFlyerSDKBlueprint::SetConsentData(
     if (Arg3) Env->DeleteLocalRef(Arg3);
     if (Arg4) Env->DeleteLocalRef(Arg4);
     Env->DeleteLocalRef(BooleanClass);
+#elif PLATFORM_IOS
+    dispatch_async(dispatch_get_main_queue(), ^ {
+        NSNumber *isUserSubjectToGDPR;
+        if (IsUserSubjectToGDPR == EAFBooleanState::ValueUnset) {
+            isUserSubjectToGDPR = nil;
+        } else if (IsUserSubjectToGDPR == EAFBooleanState::ValueTrue) {
+            isUserSubjectToGDPR = @1;
+        } else {
+            isUserSubjectToGDPR = @0;
+        }
+
+        NSNumber *hasConsentForDataUsage;
+        if (HasConsentForDataUsage == EAFBooleanState::ValueUnset) {
+            hasConsentForDataUsage = nil;
+        } else if (HasConsentForDataUsage == EAFBooleanState::ValueTrue) {
+            hasConsentForDataUsage = @1;
+        } else {
+            hasConsentForDataUsage = @0;
+        }
+
+        NSNumber *hasConsentForAdsPersonalization;
+        if (HasConsentForAdsPersonalization == EAFBooleanState::ValueUnset) {
+            hasConsentForAdsPersonalization = nil;
+        } else if (HasConsentForAdsPersonalization == EAFBooleanState::ValueTrue) {
+            hasConsentForAdsPersonalization = @1;
+        } else {
+            hasConsentForAdsPersonalization = @0;
+        }
+
+        NSNumber *hasConsentForAdStorage;
+        if (HasConsentForAdStorage == EAFBooleanState::ValueUnset) {
+            hasConsentForAdStorage = nil;
+        } else if (HasConsentForAdStorage == EAFBooleanState::ValueTrue) {
+            hasConsentForAdStorage = @1;
+        } else {
+            hasConsentForAdStorage = @0;
+        }
+
+        AppsFlyerConsent *consent = [[AppsFlyerConsent alloc] initWithIsUserSubjectToGDPR:isUserSubjectToGDPR
+                                                                   hasConsentForDataUsage:hasConsentForDataUsage
+                                                          hasConsentForAdsPersonalization:hasConsentForAdsPersonalization
+                                                                   hasConsentForAdStorage:hasConsentForAdStorage];
+        [[AppsFlyerLib shared] setConsentData:consent];
+    });
 #endif
 }
 

@@ -20,6 +20,14 @@ public class AppsFlyerSDK : ModuleRules
 
 		if (Target.Platform == UnrealTargetPlatform.IOS)
 		{
+			PublicSystemLibraryPaths.AddRange(
+				new string[] { 
+					GetSwiftStandardLibraryLinkPath("iphoneos"), 
+					"/usr/lib/swift"
+				}
+			);
+
+
 			PublicAdditionalFrameworks.Add(
 			    new Framework(
 			        "AppsFlyerLib",
@@ -51,6 +59,12 @@ public class AppsFlyerSDK : ModuleRules
 			// JNI
 			PublicIncludePathModuleNames.Add("Launch");
 		}
+	}
+
+	private static string GetSwiftStandardLibraryLinkPath(string PlatformPath)
+	{
+		string XcodeRoot = Utils.RunLocalProcessAndReturnStdOut("/usr/bin/xcode-select", "--print-path");
+		return  $"{XcodeRoot}/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/{PlatformPath}";
 	}
 }
 }
