@@ -27,7 +27,6 @@ public class AppsFlyerSDK : ModuleRules
 				}
 			);
 
-
 			PublicAdditionalFrameworks.Add(
 			    new Framework(
 			        "AppsFlyerLib",
