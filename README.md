@@ -37,7 +37,7 @@ The plugin is compatible with Unreal Engine 4 and 5.
 - [Uninstall measurement](/docs/API.md#uninstall)
 ## 🔗 [Deep Linking](/docs/deeplink.md)
 ## <a id="plugin-build-for"> 🧪 Sample App
-- [Demo](https://github.com/AppsFlyerSDK/appsflyer-unreal-plugin/tree/master/Demo)
+- [Demo](https://github.com/AppsFlyerSDK/appsflyer-unreal-plugin/tree/master/UE_5.1_Demo/Demo)
 
 -------
 ## 🔗 [API reference](/docs/API.md)
