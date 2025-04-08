@@ -74,7 +74,7 @@ extern "C" {
         DECLARE_CYCLE_STAT(TEXT("FSimpleDelegateGraphTask.InstallConversionDataLoaded"), STAT_FSimpleDelegateGraphTask_InstallConversionDataLoaded, STATGROUP_TaskGraphTasks);
         FSimpleDelegateGraphTask::CreateAndDispatchWhenReady(FSimpleDelegateGraphTask::FDelegate::CreateLambda([=]() {
             for (TObjectIterator<UAppsFlyerSDKCallbacks> Itr; Itr; ++Itr) {
-                if (*Itr && !Itr->IsPendingKill())
+                if (IsValid(*Itr))
                 {
                     Itr->OnConversionDataReceived.Broadcast(conversionData);
                 }
@@ -91,7 +91,7 @@ extern "C" {
         DECLARE_CYCLE_STAT(TEXT("FSimpleDelegateGraphTask.InstallConversionFailure"), STAT_FSimpleDelegateGraphTask_InstallConversionFailure, STATGROUP_TaskGraphTasks);
         FSimpleDelegateGraphTask::CreateAndDispatchWhenReady(FSimpleDelegateGraphTask::FDelegate::CreateLambda([=]() {
             for (TObjectIterator<UAppsFlyerSDKCallbacks> Itr; Itr; ++Itr) {
-                if (*Itr && !Itr->IsPendingKill())
+                if (IsValid(*Itr))
                 {
                     Itr->OnConversionDataRequestFailure.Broadcast(Value);
                 }
@@ -128,7 +128,7 @@ static void onConversionDataSuccess(NSDictionary *installData) {
     [FIOSAsyncTask CreateTaskWithBlock : ^ bool(void)
     {
         for (TObjectIterator<UAppsFlyerSDKCallbacks> Itr; Itr; ++Itr) {
-            if (*Itr && !Itr->IsPendingKill())
+            if (IsValid(*Itr))
             {
                 Itr->OnConversionDataReceived.Broadcast(conversionData);
             }
@@ -152,7 +152,7 @@ static void onAppOpenAttribution(NSDictionary *attributionData) {
     [FIOSAsyncTask CreateTaskWithBlock : ^ bool(void)
     {
         for (TObjectIterator<UAppsFlyerSDKCallbacks> Itr; Itr; ++Itr) {
-            if (*Itr && !Itr->IsPendingKill())
+            if (IsValid(*Itr))
             {
                 Itr->OnConversionDataReceived.Broadcast(conversionData);
             }
