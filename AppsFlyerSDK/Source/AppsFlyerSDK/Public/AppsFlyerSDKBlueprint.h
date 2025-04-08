@@ -8,6 +8,14 @@
 
 DECLARE_LOG_CATEGORY_EXTERN(LogAppsFlyerSDKBlueprint, Display, Display);
 
+UENUM(BlueprintType, meta = (UseEnumValuesAsMapKeysInBP = true))
+enum class EAFBooleanState : uint8
+{
+    ValueUnset UMETA(DisplayName = "ValueUnset"),
+    ValueTrue  UMETA(DisplayName = "ValueTrue"),
+    ValueFalse UMETA(DisplayName = "ValueFalse")
+};
+
 UCLASS()
 class APPSFLYERSDK_API UAppsFlyerSDKBlueprint : public UBlueprintFunctionLibrary {
 	GENERATED_UCLASS_BODY()
@@ -53,9 +61,34 @@ class APPSFLYERSDK_API UAppsFlyerSDKBlueprint : public UBlueprintFunctionLibrary
 	UFUNCTION(BlueprintCallable, Category = AppsFlyerSDK, DisplayName = "AppsFlyerSDK add custom data to events in the payload")
     static void setAdditionalData(TMap <FString, FString> customData);
 
-	UFUNCTION(BlueprintCallable, Category = AppsFlyerSDK, DisplayName = "AppsFlyerConsent For *Non GDPR* User")
+	UFUNCTION(BlueprintCallable, Category = AppsFlyerSDK, DisplayName = "AppsFlyerConsent For *Non GDPR* User",
+		meta = (DeprecatedFunction, DeprecationMessage = "Use SetConsentData instead"))
     static void SetConsentForNonGDPRUser();
 
-	UFUNCTION(BlueprintCallable, Category = AppsFlyerSDK, DisplayName = "AppsFlyerConsent For *GDPR* User")
+	UFUNCTION(BlueprintCallable, Category = AppsFlyerSDK, DisplayName = "AppsFlyerConsent For *GDPR* User",
+		meta = (DeprecatedFunction, DeprecationMessage = "Use SetConsentData instead"))
     static void SetConsentForGDPRUser(bool hasConsentForDataUsage, bool hasConsentForAdsPersonalization);
+
+	/*!
+	 * Set consent data for GDPR and non-GDPR users
+	 * @param IsUserSubjectToGDPR - Is the user subject to GDPR
+	 * @param HasConsentForDataUsage - Does the user have consent for data usage
+	 * @param HasConsentForAdsPersonalization - Does the user have consent for ads personalization
+	 * @param HasConsentForAdStorage - Does the user have consent for ad storage
+	 */
+	UFUNCTION(BlueprintCallable, Category = "AppsFlyerSDK")
+	static void SetConsentData(
+		EAFBooleanState IsUserSubjectToGDPR,
+		EAFBooleanState HasConsentForDataUsage,
+		EAFBooleanState HasConsentForAdsPersonalization,
+		EAFBooleanState HasConsentForAdStorage
+	);
+
+	static void SetConsentDataTOptional(
+		TOptional<bool> IsUserSubjectToGDPR,
+		TOptional<bool> HasConsentForDataUsage,
+		TOptional<bool> HasConsentForAdsPersonalization,
+		TOptional<bool> HasConsentForAdStorage
+	);
+	
 };

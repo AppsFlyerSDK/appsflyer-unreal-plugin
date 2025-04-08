@@ -12,6 +12,7 @@
 #include "Interfaces/IPluginManager.h"
 // Core
 #include "Misc/EngineVersion.h"
+#include "UObject/UObjectIterator.h"
 
 
 #if PLATFORM_ANDROID
@@ -19,6 +20,7 @@
 #include "Android/AndroidApplication.h"
 #elif PLATFORM_IOS
 #import <AppsFlyerLib/AppsFlyerLib.h>
+#import <AppsFlyerLib/AppsFlyerLib-Swift.h>
 #import "IOS/UE4AFSDKDelegate.h"
 #include "IOSAppDelegate.h"
 #import <objc/message.h>
@@ -410,8 +412,8 @@ void UAppsFlyerSDKBlueprint::SetConsentForNonGDPRUser()
     JNIEnv* env = FAndroidApplication::GetJavaEnv();
     jmethodID UPLMethod1 = FJavaWrapper::FindMethod(env, FJavaWrapper::GameActivityClassID, "afSetConsentData", "(ZZZ)V", false);
     FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, UPLMethod1, false, false, false);
-#elif PLATFORM_IOS    
-    AppsFlyerConsent *consent = [[AppsFlyerConsent alloc] initNonGDPRUser];
+#elif PLATFORM_IOS
+    AppsFlyerConsent *consent = [[AppsFlyerConsent alloc] initWithNonGDPRUser];
     [[AppsFlyerLib shared] setConsentData:consent];
 #else
     return;
@@ -431,4 +433,145 @@ void UAppsFlyerSDKBlueprint::SetConsentForGDPRUser(bool hasConsentForDataUsage, 
 #else
     return;
 #endif
+}
+
+void UAppsFlyerSDKBlueprint::SetConsentData(
+    EAFBooleanState IsUserSubjectToGDPR,
+    EAFBooleanState HasConsentForDataUsage,
+    EAFBooleanState HasConsentForAdsPersonalization,
+    EAFBooleanState HasConsentForAdStorage)
+{
+#if WITH_EDITOR
+    auto EnumToString = [](EAFBooleanState State) -> FString
+    {
+        switch (State)
+        {
+            case EAFBooleanState::ValueTrue:  return TEXT("True");
+            case EAFBooleanState::ValueFalse: return TEXT("False");
+            case EAFBooleanState::ValueUnset:
+            default:                          return TEXT("Unset");
+        }
+    };
+
+    UE_LOG(LogAppsFlyerSDKBlueprint, Display, TEXT("SetConsentData (Editor Test): GDPR=%s, DataUsage=%s, AdsPersonalization=%s, AdStorage=%s"),
+        *EnumToString(IsUserSubjectToGDPR),
+        *EnumToString(HasConsentForDataUsage),
+        *EnumToString(HasConsentForAdsPersonalization),
+        *EnumToString(HasConsentForAdStorage));
+#endif
+
+#if PLATFORM_ANDROID
+    JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+
+    jmethodID UPLMethod = FJavaWrapper::FindMethod(
+        Env,
+        FJavaWrapper::GameActivityClassID,
+        "appsflyer_set_consent_v2",
+        "(Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;)V",
+        false
+    );
+
+    if (UPLMethod == nullptr)
+    {
+        UE_LOG(LogTemp, Error, TEXT("Failed to find method appsflyer_set_consent_v2"));
+        return;
+    }
+
+    jclass BooleanClass = Env->FindClass("java/lang/Boolean");
+    jmethodID BooleanConstructor = Env->GetMethodID(BooleanClass, "<init>", "(Z)V");
+
+    auto MakeJavaBoolean = [&](EAFBooleanState State) -> jobject
+    {
+        switch (State)
+        {
+            case EAFBooleanState::ValueTrue:
+                return Env->NewObject(BooleanClass, BooleanConstructor, JNI_TRUE);
+            case EAFBooleanState::ValueFalse:
+                return Env->NewObject(BooleanClass, BooleanConstructor, JNI_FALSE);
+            case EAFBooleanState::ValueUnset:
+            default:
+                return nullptr;
+        }
+    };
+
+    jobject Arg1 = MakeJavaBoolean(IsUserSubjectToGDPR);
+    jobject Arg2 = MakeJavaBoolean(HasConsentForDataUsage);
+    jobject Arg3 = MakeJavaBoolean(HasConsentForAdsPersonalization);
+    jobject Arg4 = MakeJavaBoolean(HasConsentForAdStorage);
+
+    Env->CallVoidMethod(FJavaWrapper::GameActivityThis, UPLMethod, Arg1, Arg2, Arg3, Arg4);
+
+    if (Arg1) Env->DeleteLocalRef(Arg1);
+    if (Arg2) Env->DeleteLocalRef(Arg2);
+    if (Arg3) Env->DeleteLocalRef(Arg3);
+    if (Arg4) Env->DeleteLocalRef(Arg4);
+    Env->DeleteLocalRef(BooleanClass);
+#elif PLATFORM_IOS
+    dispatch_async(dispatch_get_main_queue(), ^ {
+        NSNumber *isUserSubjectToGDPR;
+        if (IsUserSubjectToGDPR == EAFBooleanState::ValueUnset) {
+            isUserSubjectToGDPR = nil;
+        } else if (IsUserSubjectToGDPR == EAFBooleanState::ValueTrue) {
+            isUserSubjectToGDPR = @1;
+        } else {
+            isUserSubjectToGDPR = @0;
+        }
+
+        NSNumber *hasConsentForDataUsage;
+        if (HasConsentForDataUsage == EAFBooleanState::ValueUnset) {
+            hasConsentForDataUsage = nil;
+        } else if (HasConsentForDataUsage == EAFBooleanState::ValueTrue) {
+            hasConsentForDataUsage = @1;
+        } else {
+            hasConsentForDataUsage = @0;
+        }
+
+        NSNumber *hasConsentForAdsPersonalization;
+        if (HasConsentForAdsPersonalization == EAFBooleanState::ValueUnset) {
+            hasConsentForAdsPersonalization = nil;
+        } else if (HasConsentForAdsPersonalization == EAFBooleanState::ValueTrue) {
+            hasConsentForAdsPersonalization = @1;
+        } else {
+            hasConsentForAdsPersonalization = @0;
+        }
+
+        NSNumber *hasConsentForAdStorage;
+        if (HasConsentForAdStorage == EAFBooleanState::ValueUnset) {
+            hasConsentForAdStorage = nil;
+        } else if (HasConsentForAdStorage == EAFBooleanState::ValueTrue) {
+            hasConsentForAdStorage = @1;
+        } else {
+            hasConsentForAdStorage = @0;
+        }
+
+        AppsFlyerConsent *consent = [[AppsFlyerConsent alloc] initWithIsUserSubjectToGDPR:isUserSubjectToGDPR
+                                                                   hasConsentForDataUsage:hasConsentForDataUsage
+                                                          hasConsentForAdsPersonalization:hasConsentForAdsPersonalization
+                                                                   hasConsentForAdStorage:hasConsentForAdStorage];
+        [[AppsFlyerLib shared] setConsentData:consent];
+    });
+#endif
+}
+
+void UAppsFlyerSDKBlueprint::SetConsentDataTOptional(
+	TOptional<bool> IsUserSubjectToGDPR,
+	TOptional<bool> HasConsentForDataUsage,
+	TOptional<bool> HasConsentForAdsPersonalization,
+	TOptional<bool> HasConsentForAdStorage)
+{
+	auto Convert = [](TOptional<bool> OptionalFlag) -> EAFBooleanState
+	{
+		if (!OptionalFlag.IsSet())
+		{
+			return EAFBooleanState::ValueUnset;
+		}
+		return OptionalFlag.GetValue() ? EAFBooleanState::ValueTrue : EAFBooleanState::ValueFalse;
+	};
+
+	SetConsentData(
+		Convert(IsUserSubjectToGDPR),
+		Convert(HasConsentForDataUsage),
+		Convert(HasConsentForAdsPersonalization),
+		Convert(HasConsentForAdStorage)
+	);
 }
