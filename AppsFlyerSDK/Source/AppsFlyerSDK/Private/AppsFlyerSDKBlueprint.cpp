@@ -71,17 +71,33 @@ extern "C" {
         }
         // Java map to UE4 map
         conversionData.InstallData = map;
-        for (TObjectIterator<UAppsFlyerSDKCallbacks> Itr; Itr; ++Itr) {
-            Itr->OnConversionDataReceived.Broadcast(conversionData);
-        }
+        DECLARE_CYCLE_STAT(TEXT("FSimpleDelegateGraphTask.InstallConversionDataLoaded"), STAT_FSimpleDelegateGraphTask_InstallConversionDataLoaded, STATGROUP_TaskGraphTasks);
+        FSimpleDelegateGraphTask::CreateAndDispatchWhenReady(FSimpleDelegateGraphTask::FDelegate::CreateLambda([=]() {
+            for (TObjectIterator<UAppsFlyerSDKCallbacks> Itr; Itr; ++Itr) {
+                if (*Itr && !Itr->IsPendingKill())
+                {
+                    Itr->OnConversionDataReceived.Broadcast(conversionData);
+                }
+            }
+        }), GET_STATID(STAT_FSimpleDelegateGraphTask_InstallConversionDataLoaded), nullptr, ENamedThreads::GameThread);
+
     }
     JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onInstallConversionFailureNative
     (JNIEnv *env, jobject obj, jstring stringError) {
         jboolean isCopy;
         const char *convertedValue = (env)->GetStringUTFChars(stringError, &isCopy);
-        for (TObjectIterator<UAppsFlyerSDKCallbacks> Itr; Itr; ++Itr) {
-            Itr->OnConversionDataRequestFailure.Broadcast(convertedValue);
-        }
+        FString Value(UTF8_TO_TCHAR(convertedValue));
+
+        DECLARE_CYCLE_STAT(TEXT("FSimpleDelegateGraphTask.InstallConversionFailure"), STAT_FSimpleDelegateGraphTask_InstallConversionFailure, STATGROUP_TaskGraphTasks);
+        FSimpleDelegateGraphTask::CreateAndDispatchWhenReady(FSimpleDelegateGraphTask::FDelegate::CreateLambda([=]() {
+            for (TObjectIterator<UAppsFlyerSDKCallbacks> Itr; Itr; ++Itr) {
+                if (*Itr && !Itr->IsPendingKill())
+                {
+                    Itr->OnConversionDataRequestFailure.Broadcast(Value);
+                }
+            }
+        }), GET_STATID(STAT_FSimpleDelegateGraphTask_InstallConversionFailure), nullptr, ENamedThreads::GameThread);
+
         (env)->ReleaseStringUTFChars(stringError, convertedValue);
     }
     JNIEXPORT void JNICALL Java_com_appsflyer_AppsFlyer2dXConversionCallback_onAppOpenAttributionNative
@@ -109,9 +125,16 @@ static void onConversionDataSuccess(NSDictionary *installData) {
         map.Add(*ueKey, *ueValue);
     }
     conversionData.InstallData = map;
-    for (TObjectIterator<UAppsFlyerSDKCallbacks> Itr; Itr; ++Itr) {
-        Itr->OnConversionDataReceived.Broadcast(conversionData);
-    }
+    [FIOSAsyncTask CreateTaskWithBlock : ^ bool(void)
+    {
+        for (TObjectIterator<UAppsFlyerSDKCallbacks> Itr; Itr; ++Itr) {
+            if (*Itr && !Itr->IsPendingKill())
+            {
+                Itr->OnConversionDataReceived.Broadcast(conversionData);
+            }
+        }
+        return true;
+    }];
 }
 static void onConversionDataFail(NSString *error) {
     NSLog(@"%@", error);
@@ -126,9 +149,16 @@ static void onAppOpenAttribution(NSDictionary *attributionData) {
         map.Add(*ueKey, *ueValue);
     }
     conversionData.InstallData = map;
-    for (TObjectIterator<UAppsFlyerSDKCallbacks> Itr; Itr; ++Itr) {
-        Itr->OnConversionDataReceived.Broadcast(conversionData);
-    }
+    [FIOSAsyncTask CreateTaskWithBlock : ^ bool(void)
+    {
+        for (TObjectIterator<UAppsFlyerSDKCallbacks> Itr; Itr; ++Itr) {
+            if (*Itr && !Itr->IsPendingKill())
+            {
+                Itr->OnConversionDataReceived.Broadcast(conversionData);
+            }
+        }
+        return true;
+    }] ;
 }
 static void onAppOpenAttributionFailure(NSString *error) {
     NSLog(@"%@", error);
