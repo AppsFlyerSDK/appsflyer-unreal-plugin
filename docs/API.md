@@ -74,7 +74,8 @@ static void logEvent(FString eventName,
 
 ## Get AppsFlyerUID
 
-To receive unique AppsFlyer ID per app installation you can use this blueprint:
+Retrieve the AppsFlyer ID (unique installation Id) from the SDK. 
+
 
 ### Blueprint
 
