@@ -25,9 +25,7 @@ The plugin is compatible with Unreal Engine 4 and 5.
 
 *When submitting an issue please specify your AppsFlyer sign-up (account) email , your app ID , reproduction steps, code snippets, logs, and any additional relevant information.*
 
-## Table of content
-
-
+## Table of contents
 
  ---
 ## <a id="plugin-build-for"> 🚀 Getting Started
