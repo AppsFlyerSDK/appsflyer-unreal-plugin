@@ -12,7 +12,7 @@ slug: ue-api
 - [Start](#start)
 - [Log Event](#log-event)
 - [Get AppsFlyerUID](#get-appsflyeruid)
-- [WaitForAttUserAutorization (iOS only)](#waitForATTUserAuthorizationWithTimeoutInterval)
+- [WaitForATTUserAutorization (iOS only)](#waitForATTUserAuthorizationWithTimeoutInterval)
 - [Set Customer User Id](#set-customer-user-id)
 - [Set Consent Data](#set-consent-data)
 - [Uninstall Measurement](#uninstall-measurement)
