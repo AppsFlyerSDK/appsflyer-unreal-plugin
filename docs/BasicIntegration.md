@@ -38,9 +38,9 @@ The **Automatically start the AppsFlyer SDK** setting determines whether the App
     -   The SDK does **not** start automatically
     -   You must manually call the SDK’s **start** method at the appropriate time in the app logic. The SDK will **not** send a session on every background-foreground transition.
 
-#### When should this feature toggled off?
+#### When should this be toggled off?
 
-- When the app needs to perform some actions before starting the AppsFlyer the SDK, the feature should toggled off. 
+- When the app needs to perform some actions before starting the AppsFlyer the SDK, the feature should be toggled off. 
 - Examples: 
 	- Displaying the App Tracking Transparency prompt to the user on iOS and instructing the SDK to wait with sending the install request using the `waitForATTUserAuthorizationWithTimeoutInterval` API. 
 	- Collecting consent from the user and setting it into the SDK using `SetConsentData` .
