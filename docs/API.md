@@ -24,7 +24,7 @@ slug: ue-api
 ## Configure
 
 Perform internal setup: inject plugin & engine version, read developer keys from **Project Settings**.
-See [here](docs/BasicIntegration#setup) for configuration details.
+See [here](BasicIntegration#setup) for configuration details.
 
 ### C++
 
@@ -37,7 +37,7 @@ static void configure();
 
 - Starts the SDK and sends the session to the server.
 - By default, the `start` method is called automatically once the app is being launched.
-- This setting can be disabled in the Plugin settings, to let the app developer manually control when the SDK starts. See [here](docs/BasicIntegration#automatically-starting-the-sdk) for more details.
+- This setting can be disabled in the Plugin settings, to let the app developer manually control when the SDK starts. See [here](BasicIntegration#automatically-starting-the-sdk) for more details.
 - If the Plugin is configured for a manual start, the developer should call the `start` method under the blueprint, and configure it to be called every foreground-background transition.
 
 ### Blueprint:
