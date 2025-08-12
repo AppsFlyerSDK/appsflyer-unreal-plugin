@@ -28,7 +28,9 @@ See [here](docs/BasicIntegration#setup) for configuration details.
 
 ### C++
 
+```c++
 static void configure();
+```
 
 
 ## Start
