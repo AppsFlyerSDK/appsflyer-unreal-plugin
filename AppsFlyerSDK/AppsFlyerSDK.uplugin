@@ -1,7 +1,7 @@
 {
 	"FileVersion": 3,
 	"Version": 2,
-	"VersionName": "6.16.2",
+	"VersionName": "6.17.5",
 	"FriendlyName": "AppsFlyerSDK",
 	"Description": "UE4/UE5 AppsFlyer Plugin",
 	"Category": "Misc",

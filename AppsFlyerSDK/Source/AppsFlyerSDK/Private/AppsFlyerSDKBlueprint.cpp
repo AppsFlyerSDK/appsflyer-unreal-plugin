@@ -194,19 +194,26 @@ void UAppsFlyerSDKBlueprint::configure()
     FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, PluginMethodID, jVersionName, jEngineVersion);
     env->DeleteLocalRef(jVersionName);
     env->DeleteLocalRef(jEngineVersion);
-    
+
+    if (isTCFDataCollectionEnabled)
+    {
+        jmethodID UPLMethod = FJavaWrapper::FindMethod(env, FJavaWrapper::GameActivityClassID, "afEnableTCFDataCollection", "(Z)V", false);
+        FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, UPLMethod, true);
+    }
+
+    if (defaultSettings->bDisableAppSetId)
+    {
+        UE_LOG(LogAppsFlyerSDKBlueprint, Display, TEXT("Manually disable play-services-appset"));
+        jmethodID UPLMethod = FJavaWrapper::FindMethod(env, FJavaWrapper::GameActivityClassID, "afDisableAppSetId", "()V", false);
+        FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, UPLMethod);
+    }
+
     if (isAutoStart)
     {
         jmethodID appsflyer = FJavaWrapper::FindMethod(env, FJavaWrapper::GameActivityClassID, "afStart", "(Ljava/lang/String;Z)V", false);
         jstring key = env->NewStringUTF(TCHAR_TO_UTF8(*defaultSettings->appsFlyerDevKey));
 
         FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, appsflyer, key, isDebug);
-    }
-
-    if (isTCFDataCollectionEnabled)
-    {
-        jmethodID UPLMethod = FJavaWrapper::FindMethod(env, FJavaWrapper::GameActivityClassID, "afEnableTCFDataCollection", "(Z)V", false);
-        FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, UPLMethod, true);
     }
 
 

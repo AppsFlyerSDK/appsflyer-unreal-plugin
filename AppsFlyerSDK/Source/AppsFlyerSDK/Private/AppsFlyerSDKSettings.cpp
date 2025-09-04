@@ -14,5 +14,6 @@ UAppsFlyerSDKSettings::UAppsFlyerSDKSettings(const FObjectInitializer& ObjectIni
     , bDisableSKAdNetwork(false)
     , bEnableAutoStart(true)
     , bEnableTCFDataCollection(false)
+    , bDisableAppSetId(false)
 {
 }

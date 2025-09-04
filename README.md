@@ -16,7 +16,7 @@ slug: unreal-plugin
 
 # Unreal AppsFlyer Plugin
 
-v6.16.2
+v6.17.5
 
 The plugin is compatible with Unreal Engine 4 and 5.
 
