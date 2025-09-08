@@ -6,7 +6,7 @@
             }
             dependencies {
                 implementation 'com.android.installreferrer:installreferrer:2.2'
-                implementation 'com.appsflyer:af-android-sdk:6.16.2'
+                implementation 'com.appsflyer:af-android-sdk:6.17.3'
             }
             android {
                 compileOptions {
@@ -86,6 +86,10 @@
 
             public void afEnableTCFDataCollection(boolean isTCFDataCollectionEnabled) {
                 AppsFlyerLib.getInstance().enableTCFDataCollection(isTCFDataCollectionEnabled);
+            }
+
+            public void afDisableAppSetId() {
+                AppsFlyerLib.getInstance().disableAppSetId();
             }
 
             // Deprecated
