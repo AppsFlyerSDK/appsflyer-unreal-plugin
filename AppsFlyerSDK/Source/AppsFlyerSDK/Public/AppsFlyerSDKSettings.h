@@ -46,6 +46,6 @@ public:
     bool bEnableTCFDataCollection;
 
     // Disable AppSetId collection on Android
-    UPROPERTY(Config, EditAnywhere, config, Category = "AppsFlyer", meta = (DisplayName = "Disable AppSetId collection (Only Android)"))
+    UPROPERTY(Config, EditAnywhere, config, Category = "AppsFlyer", meta = (DisplayName = "Disable AppSetId collection (Android only)"))
     bool bDisableAppSetId;
 };

@@ -6,7 +6,7 @@ Release type: **Minor**
 
 **Overview and Highlights:**
 
-- **Version Update**: Updated plugin version from v6.16.2 to v6.17.3
+- **Version Update**: Updated SDK version on Android to v6.17.3 and iOS to v6.17.5
 - **New Android API**: Added `disableAppSetId()` method to disable AppSetId collection on Android platforms
 
 **New APIs:**
@@ -14,9 +14,11 @@ Release type: **Minor**
 
 ### 1.0.0
 Release date **May 2019**
-Release type: **Major**
+Release type: **Major** / Minor / Hotfix
 
 **Overview and Highlights:**
+
+- Plugin Created!
 
 - API
   * void afStart(String key, boolean isDebug)
@@ -24,5 +26,6 @@ Release type: **Major**
   * void void afLogEvent(String eventName, Map<String, Object> eventValues)
   
 - Android SDK to v6.4.3
+
 - iOS SDK to v6.4.4
 
