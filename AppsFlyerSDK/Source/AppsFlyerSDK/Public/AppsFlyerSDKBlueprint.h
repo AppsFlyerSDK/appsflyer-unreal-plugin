@@ -30,6 +30,24 @@ enum class EAFValidateAndLogStatus : uint8
     Error   UMETA(DisplayName = "Error")
 };
 
+UENUM(BlueprintType)
+enum class EAFMediationNetwork : uint8
+{
+	Ironsource					UMETA(DisplayName = "IronSource"),
+	Applovinmax					UMETA(DisplayName = "ApplovinMax"),
+	Googleadmob					UMETA(DisplayName = "GoogleAdmob"),
+	Fyber						UMETA(DisplayName = "Fyber"),
+	Appodeal					UMETA(DisplayName = "Appodeal"),
+	Admost						UMETA(DisplayName = "Admost"),
+	Topon						UMETA(DisplayName = "Topon"),
+	Tradplus					UMETA(DisplayName = "TradPlus"),
+	Yandex						UMETA(DisplayName = "Yandex"),
+	Chartboost					UMETA(DisplayName = "Chartboost"),
+	Unity						UMETA(DisplayName = "Unity"),
+	CustomMediation				UMETA(DisplayName = "Custom Mediation"),
+	DirectMonetizationNetwork	UMETA(DisplayName = "Direct Monetization Network")
+};
+
 USTRUCT(BlueprintType)
 struct FAFSDKPurchaseDetails
 {
@@ -136,6 +154,17 @@ class APPSFLYERSDK_API UAppsFlyerSDKBlueprint : public UBlueprintFunctionLibrary
 		TOptional<bool> HasConsentForAdsPersonalization,
 		TOptional<bool> HasConsentForAdStorage
 	);
+
+	/*!
+	* Log revenue from ads
+	* @param monetizationNetwork - Monetization network the ad was shown by, such as AdMob, UnityAds, Facebook e.t.c.
+	* @param mediationNetwork - Mediation network.
+	* @param revenue - Ad revenue (in millions)
+	* @param currency - Currency code
+	* @param extraData - Optional extra info for ad revenue. Can have "Country", "UnitID", "AdType" and "Placement" keys.
+	*/
+	UFUNCTION(BlueprintCallable, Category = AppsFlyerSDK, DisplayName = "AppsFlyerSDK log ad revenue")
+	static void logAdRevenue(FString monetizationNetwork, EAFMediationNetwork mediationNetwork, float revenue, FString currency, TMap <FString, FString> extraData);
 
 	/*!
 	 * Validates and logs an in-app purchase using the updated VAL V2 flow.

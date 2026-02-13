@@ -41,6 +41,14 @@
             import com.appsflyer.internal.platform_extension.PluginInfo;
             import java.util.HashMap;
             import java.util.Map;
+
+            import com.appsflyer.AFAdRevenueData;
+            import com.appsflyer.MediationNetwork;
+            import com.appsflyer.AppsFlyerLib;
+
+            import java.util.Currency;
+
+            import android.util.Log;
         </insert>
     </gameActivityImportAdditions>
     <gameActivityClassAdditions>
@@ -92,6 +100,27 @@
                 AppsFlyerLib.getInstance().disableAppSetId();
             }
 
+            public void afLogAdRevenue(
+                String monetizationNetwork,
+                int mediationNetwork,
+                double revenue,
+                String currency,
+                Map<String, String> customData)
+            {
+                AFAdRevenueData adRevenueData = new AFAdRevenueData(monetizationNetwork, getAFMediationNetwork(mediationNetwork), currency, revenue);
+    
+                Map<String, Object> additionalParameters = new HashMap<>();
+    
+                if(customData.containsKey("Country")) additionalParameters.put(AdRevenueScheme.COUNTRY, customData.get("Country"));
+                if(customData.containsKey("UnitID")) additionalParameters.put(AdRevenueScheme.AD_UNIT, customData.get("UnitID"));
+                if(customData.containsKey("AdType")) additionalParameters.put(AdRevenueScheme.AD_TYPE, customData.get("AdType"));
+                if(customData.containsKey("Placement")) additionalParameters.put(AdRevenueScheme.PLACEMENT, customData.get("Placement"));
+    
+                AppsFlyerLib.getInstance().logAdRevenue(adRevenueData, additionalParameters);
+    
+                Log.debug("AppsflyerLog Track ad revenue");
+            }
+
             // Deprecated
             public void afSetConsentData(boolean isGDPR, boolean hasConsentForDataUsage, boolean hasConsentForAdsPersonalization) {
                 AppsFlyerConsent consent;
@@ -116,6 +145,25 @@
                 );
 
                 AppsFlyerLib.getInstance().setConsentData(consent);
+            }
+
+            public MediationNetwork getAFMediationNetwork(int network){
+                switch (network) {
+                    case 0: return MediationNetwork.IRONSOURCE;
+                    case 1: return MediationNetwork.APPLOVIN_MAX;
+                    case 2: return MediationNetwork.GOOGLE_ADMOB;
+                    case 3: return MediationNetwork.FYBER;
+                    case 4: return MediationNetwork.APPODEAL;
+                    case 5: return MediationNetwork.ADMOST;
+                    case 6: return MediationNetwork.TOPON;
+                    case 7: return MediationNetwork.TRADPLUS;
+                    case 8: return MediationNetwork.YANDEX;
+                    case 9: return MediationNetwork.CHARTBOOST;
+                    case 10: return MediationNetwork.UNITY;
+                    case 11: return MediationNetwork.CUSTOM_MEDIATION;
+                    case 12: return MediationNetwork.DIRECT_MONETIZATION_NETWORK;
+                    default: return MediationNetwork.CUSTOM_MEDIATION;
+                }
             }
         </insert>
     </gameActivityClassAdditions>

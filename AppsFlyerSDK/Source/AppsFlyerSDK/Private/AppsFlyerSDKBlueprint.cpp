@@ -200,6 +200,26 @@ static void onAppOpenAttribution(NSDictionary *attributionData) {
 static void onAppOpenAttributionFailure(NSString *error) {
     NSLog(@"%@", error);
 }
+
+static AppsFlyerAdRevenueMediationNetworkType mediationNetworkIOSTypeFromEnum(EAFMediationNetwork network) {
+    switch (network)
+    {
+        case EAFMediationNetwork::Ironsource: return AppsFlyerAdRevenueMediationNetworkTypeIronSource;
+        case EAFMediationNetwork::Applovinmax: return AppsFlyerAdRevenueMediationNetworkTypeApplovinMax;
+        case EAFMediationNetwork::Googleadmob: return AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob;
+        case EAFMediationNetwork::Fyber: return AppsFlyerAdRevenueMediationNetworkTypeFyber;
+        case EAFMediationNetwork::Appodeal: return AppsFlyerAdRevenueMediationNetworkTypeAppodeal;
+        case EAFMediationNetwork::Admost: return AppsFlyerAdRevenueMediationNetworkTypeAdmost;
+        case EAFMediationNetwork::Topon: return AppsFlyerAdRevenueMediationNetworkTypeTopon;
+        case EAFMediationNetwork::Tradplus: return AppsFlyerAdRevenueMediationNetworkTypeTradplus;
+        case EAFMediationNetwork::Yandex: return AppsFlyerAdRevenueMediationNetworkTypeYandex;
+        case EAFMediationNetwork::Chartboost: return AppsFlyerAdRevenueMediationNetworkTypeChartBoost;
+        case EAFMediationNetwork::Unity: return AppsFlyerAdRevenueMediationNetworkTypeUnity;
+        case EAFMediationNetwork::CustomMediation: return AppsFlyerAdRevenueMediationNetworkTypeCustom;
+        case EAFMediationNetwork::DirectMonetizationNetwork: return AppsFlyerAdRevenueMediationNetworkTypeDirectMonetization;
+        default: return AppsFlyerAdRevenueMediationNetworkTypeCustom;
+    }
+}
 #endif
 UAppsFlyerSDKBlueprint::UAppsFlyerSDKBlueprint(const FObjectInitializer &ObjectInitializer) : Super(ObjectInitializer) {}
 
@@ -647,6 +667,55 @@ void UAppsFlyerSDKBlueprint::SetConsentDataTOptional(
 		Convert(HasConsentForAdsPersonalization),
 		Convert(HasConsentForAdStorage)
 	);
+}
+
+void UAppsFlyerSDKBlueprint::logAdRevenue(FString monetizationNetwork, EAFMediationNetwork mediationNetwork, float revenue, FString currency, TMap <FString, FString> extraData)
+{
+#if PLATFORM_ANDROID
+    JNIEnv* env = FAndroidApplication::GetJavaEnv();
+    jmethodID method = FJavaWrapper::FindMethod(env,
+                                    FJavaWrapper::GameActivityClassID,
+                                    "afLogAdRevenue",
+                                    "(Ljava/lang/String;IDLjava/lang/String;Ljava/util/Map;)V", false);
+    
+    jclass mapClass = env->FindClass("java/util/HashMap");
+    jmethodID mapConstructor = env->GetMethodID(mapClass, "<init>", "()V");
+    jobject map = env->NewObject(mapClass, mapConstructor);
+    jmethodID putMethod = env->GetMethodID(mapClass, "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
+    for (const TPair<FString, FString>& pair : extraData) {
+        env->CallObjectMethod(map, putMethod, env->NewStringUTF(TCHAR_TO_UTF8(*pair.Key)), env->NewStringUTF(TCHAR_TO_UTF8(*pair.Value)));
+    }
+    
+    jstring jNetworkName = env->NewStringUTF(TCHAR_TO_UTF8(*monetizationNetwork));
+    jint jMediation = static_cast<jint>(mediationNetwork);
+    jstring jCurrency = env->NewStringUTF(TCHAR_TO_UTF8(*currency));
+    
+    FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, method, jNetworkName, jMediation, revenue, jCurrency, map);
+    
+    env->DeleteLocalRef(jNetworkName);
+    env->DeleteLocalRef(jCurrency);
+#elif PLATFORM_IOS
+    dispatch_async(dispatch_get_main_queue(), ^ {
+        AFAdRevenueData* AdRevenue = [[AFAdRevenueData alloc]
+            initWithMonetizationNetwork: monetizationNetwork.GetNSString()
+            mediationNetwork: mediationNetworkIOSTypeFromEnum(mediationNetwork)
+            currencyIso4217Code: currency.GetNSString()
+            eventRevenue: [NSNumber numberWithFloat: revenue]
+        ];
+            
+        NSMutableDictionary* additionalParameters = [[NSMutableDictionary alloc] init];
+        if (extraData.Contains("Country")) [additionalParameters setValue:extraData["Country"].GetNSString() forKey:kAppsFlyerAdRevenueCountry];
+        if (extraData.Contains("AdType")) [additionalParameters setValue:extraData["AdType"].GetNSString() forKey:kAppsFlyerAdRevenueAdType];
+        if (extraData.Contains("UnitID")) [additionalParameters setValue:extraData["UnitID"].GetNSString() forKey:kAppsFlyerAdRevenueAdUnit];
+        if (extraData.Contains("Placement")) [additionalParameters setValue:extraData["Placement"].GetNSString() forKey:kAppsFlyerAdRevenuePlacement];
+            
+        [[AppsFlyerLib shared] logAdRevenue:AdRevenue additionalParameters:additionalParameters];
+    });
+#else
+    return;
+#endif
+
+    UE_LOG(LogAppsFlyerSDKBlueprint, Log, TEXT("Log ad revenue"));
 }
 
 void UAppsFlyerSDKBlueprint::ValidateAndLogInAppPurchase(
