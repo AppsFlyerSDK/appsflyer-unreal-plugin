@@ -4,6 +4,7 @@
 #include "AppsFlyerHUDActor.h"
 #include "Blueprint/UserWidget.h"
 #include "GameFramework/PlayerController.h"
+#include "AppsFlyerSDKBlueprint.h"
 
 // Sets default values
 AAppsFlyerHUDActor::AAppsFlyerHUDActor()
@@ -32,6 +33,19 @@ void AAppsFlyerHUDActor::BeginPlay()
         TOptional<bool>(),       // HasConsentForAdsPersonalization (unset)
         TOptional<bool>(true)    // HasConsentForAdStorage
     );*/
+
+    FAFAdRevenueData AdRevenueData;
+    AdRevenueData.MonetizationNetwork = TEXT("ironsource");
+    AdRevenueData.MediationNetwork    = EAFMediationNetwork::IronSource;
+    AdRevenueData.CurrencyIso4217Code = TEXT("USD");
+    AdRevenueData.EventRevenue        = 0.01;
+    TMap<FString, FString> AdRevenueParams;
+    AdRevenueParams.Add(TEXT("country"),    TEXT("US"));
+    AdRevenueParams.Add(TEXT("ad_unit"),    TEXT("test_ad_unit"));
+    AdRevenueParams.Add(TEXT("ad_type"),    TEXT("banner"));
+    AdRevenueParams.Add(TEXT("placement"),  TEXT("main_menu"));
+    UAppsFlyerSDKBlueprint::logAdRevenue(AdRevenueData, AdRevenueParams);
+    UE_LOG(LogTemp, Log, TEXT("[AppsFlyerHUDActor] logAdRevenue called"));
 
     if (MainMenuWidgetClass)
     {

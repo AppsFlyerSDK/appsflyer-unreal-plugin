@@ -17,8 +17,10 @@
 #elif PLATFORM_IOS
 #import <AppsFlyerLib/AppsFlyerLib.h>
 #import <AppsFlyerLib/AppsFlyerLib-Swift.h>
+#import <AppsFlyerLib/AFAdRevenueData.h>
 #import "IOS/UE4AFSDKDelegate.h"
 #include "IOSAppDelegate.h"
+#include "IOS/IOSAsyncTask.h"
 #import <objc/message.h>
 
 // SKAdNewtork request configuration workaround
@@ -788,6 +790,78 @@ void UAppsFlyerSDKBlueprint::ValidateAndLogInAppPurchase(
                                }
                              }];
       }
+    });
+#endif
+}
+
+#if PLATFORM_ANDROID
+static FString MediationNetworkToAndroidString(EAFMediationNetwork Network)
+{
+    switch (Network)
+    {
+        case EAFMediationNetwork::GoogleAdMob:        return TEXT("googleadmob");
+        case EAFMediationNetwork::IronSource:         return TEXT("ironsource");
+        case EAFMediationNetwork::ApplovinMax:        return TEXT("applovinmax");
+        case EAFMediationNetwork::Fyber:              return TEXT("fyber");
+        case EAFMediationNetwork::Appodeal:           return TEXT("appodeal");
+        case EAFMediationNetwork::Admost:             return TEXT("Admost");
+        case EAFMediationNetwork::Topon:              return TEXT("Topon");
+        case EAFMediationNetwork::Tradplus:           return TEXT("Tradplus");
+        case EAFMediationNetwork::Yandex:             return TEXT("Yandex");
+        case EAFMediationNetwork::ChartBoost:         return TEXT("chartboost");
+        case EAFMediationNetwork::Unity:              return TEXT("Unity");
+        case EAFMediationNetwork::ToponPte:           return TEXT("toponpte");
+        case EAFMediationNetwork::Custom:             return TEXT("customMediation");
+        case EAFMediationNetwork::DirectMonetization: return TEXT("directMonetizationNetwork");
+        default:                                      return TEXT("customMediation");
+    }
+}
+#endif
+
+void UAppsFlyerSDKBlueprint::logAdRevenue(
+    const FAFAdRevenueData& AdRevenueData,
+    const TMap<FString, FString>& AdditionalParameters)
+{
+#if PLATFORM_ANDROID
+    JNIEnv* env = FAndroidApplication::GetJavaEnv();
+    jmethodID methodId = FJavaWrapper::FindMethod(env,
+        FJavaWrapper::GameActivityClassID,
+        "afLogAdRevenue",
+        "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;DLjava/util/Map;)V", false);
+
+    jstring jMonetization = env->NewStringUTF(TCHAR_TO_UTF8(*AdRevenueData.MonetizationNetwork));
+    jstring jMediation    = env->NewStringUTF(TCHAR_TO_UTF8(*MediationNetworkToAndroidString(AdRevenueData.MediationNetwork)));
+    jstring jCurrency     = env->NewStringUTF(TCHAR_TO_UTF8(*AdRevenueData.CurrencyIso4217Code));
+
+    jclass mapClass     = env->FindClass("java/util/HashMap");
+    jmethodID mapCtor   = env->GetMethodID(mapClass, "<init>", "()V");
+    jobject map         = env->NewObject(mapClass, mapCtor);
+    jmethodID putMethod = env->GetMethodID(mapClass, "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
+    for (const TPair<FString, FString>& pair : AdditionalParameters)
+    {
+        env->CallObjectMethod(map, putMethod,
+            env->NewStringUTF(TCHAR_TO_UTF8(*pair.Key)),
+            env->NewStringUTF(TCHAR_TO_UTF8(*pair.Value)));
+    }
+
+    FJavaWrapper::CallVoidMethod(env, FJavaWrapper::GameActivityThis, methodId,
+        jMonetization, jMediation, jCurrency, (jdouble)AdRevenueData.EventRevenue, map);
+#elif PLATFORM_IOS
+    dispatch_async(dispatch_get_main_queue(), ^{
+        AppsFlyerAdRevenueMediationNetworkType mediationNetwork =
+            (AppsFlyerAdRevenueMediationNetworkType)((int)AdRevenueData.MediationNetwork + 1);
+        NSNumber *revenue = [NSNumber numberWithDouble:AdRevenueData.EventRevenue];
+        AFAdRevenueData *adRevenue = [[AFAdRevenueData alloc]
+            initWithMonetizationNetwork:AdRevenueData.MonetizationNetwork.GetNSString()
+                       mediationNetwork:mediationNetwork
+                    currencyIso4217Code:AdRevenueData.CurrencyIso4217Code.GetNSString()
+                           eventRevenue:revenue];
+        NSMutableDictionary *additionalParams = [NSMutableDictionary dictionary];
+        for (const TPair<FString, FString>& pair : AdditionalParameters)
+        {
+            [additionalParams setValue:pair.Value.GetNSString() forKey:pair.Key.GetNSString()];
+        }
+        [[AppsFlyerLib shared] logAdRevenue:adRevenue additionalParameters:additionalParams];
     });
 #endif
 }

@@ -67,6 +67,18 @@
                 AppsFlyerLib.getInstance().logEvent(this, eventName, eventValues);
             }
 
+            public void afLogAdRevenue(String monetizationNetwork, String mediationNetworkName, String currencyIso4217Code, double revenue, Map&lt;String, Object&gt; additionalParameters) {
+                com.appsflyer.MediationNetwork mediationNetwork = com.appsflyer.MediationNetwork.CUSTOM_MEDIATION;
+                for (com.appsflyer.MediationNetwork mn : com.appsflyer.MediationNetwork.values()) {
+                    if (mn.getValue().equals(mediationNetworkName)) {
+                        mediationNetwork = mn;
+                        break;
+                    }
+                }
+                com.appsflyer.AFAdRevenueData adRevenueData = new com.appsflyer.AFAdRevenueData(monetizationNetwork, mediationNetwork, currencyIso4217Code, revenue);
+                AppsFlyerLib.getInstance().logAdRevenue(adRevenueData, additionalParameters);
+            }
+
             public String afGetAppsFlyerUID() {
                 return AppsFlyerLib.getInstance().getAppsFlyerUID(this);
             }

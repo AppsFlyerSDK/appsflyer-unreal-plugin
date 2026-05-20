@@ -30,6 +30,43 @@ enum class EAFValidateAndLogStatus : uint8
     Error   UMETA(DisplayName = "Error")
 };
 
+UENUM(BlueprintType)
+enum class EAFMediationNetwork : uint8
+{
+    GoogleAdMob        UMETA(DisplayName = "Google AdMob"),
+    IronSource         UMETA(DisplayName = "IronSource"),
+    ApplovinMax        UMETA(DisplayName = "ApplovinMax"),
+    Fyber              UMETA(DisplayName = "Fyber"),
+    Appodeal           UMETA(DisplayName = "Appodeal"),
+    Admost             UMETA(DisplayName = "Admost"),
+    Topon              UMETA(DisplayName = "Topon"),
+    Tradplus           UMETA(DisplayName = "Tradplus"),
+    Yandex             UMETA(DisplayName = "Yandex"),
+    ChartBoost         UMETA(DisplayName = "ChartBoost"),
+    Unity              UMETA(DisplayName = "Unity"),
+    ToponPte           UMETA(DisplayName = "ToponPte"),
+    Custom             UMETA(DisplayName = "Custom"),
+    DirectMonetization UMETA(DisplayName = "Direct Monetization")
+};
+
+USTRUCT(BlueprintType)
+struct FAFAdRevenueData
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite, Category = "AppsFlyerSDK")
+    FString MonetizationNetwork;
+
+    UPROPERTY(BlueprintReadWrite, Category = "AppsFlyerSDK")
+    EAFMediationNetwork MediationNetwork = EAFMediationNetwork::Custom;
+
+    UPROPERTY(BlueprintReadWrite, Category = "AppsFlyerSDK")
+    FString CurrencyIso4217Code;
+
+    UPROPERTY(BlueprintReadWrite, Category = "AppsFlyerSDK")
+    double EventRevenue = 0.0;
+};
+
 USTRUCT(BlueprintType)
 struct FAFSDKPurchaseDetails
 {
@@ -149,5 +186,16 @@ class APPSFLYERSDK_API UAppsFlyerSDKBlueprint : public UBlueprintFunctionLibrary
 		const FAFSDKPurchaseDetails& PurchaseDetails,
 		const TMap<FString, FString>& PurchaseAdditionalDetails
 	);
-	
+
+	/*!
+	 * Log ad revenue from a mediation network.
+	 * @param AdRevenueData - Required fields: MonetizationNetwork, MediationNetwork, CurrencyIso4217Code, EventRevenue
+	 * @param AdditionalParameters - Optional metadata (e.g. country, ad_unit, ad_type, placement)
+	 */
+	UFUNCTION(BlueprintCallable, Category = "AppsFlyerSDK", DisplayName = "Log Ad Revenue")
+	static void logAdRevenue(
+		const FAFAdRevenueData& AdRevenueData,
+		const TMap<FString, FString>& AdditionalParameters
+	);
+
 };
