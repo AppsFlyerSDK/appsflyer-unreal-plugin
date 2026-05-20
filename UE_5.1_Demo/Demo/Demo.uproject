@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "{8B2FE96D-134B-225E-E1CB-558D9C7A3170}",
+	"EngineAssociation": "/Users/q5/af/UnrealEngine",
 	"Category": "",
 	"Description": "",
 	"Modules": [
@@ -44,7 +44,19 @@
 			"Enabled": false
 		},
 		{
+			"Name": "HairStrands",
+			"Enabled": false
+		},
+		{
 			"Name": "UdpMessaging",
+			"Enabled": false
+		},
+		{
+			"Name": "TmvMedia",
+			"Enabled": false
+		},
+		{
+			"Name": "CompositeCore",
 			"Enabled": false
 		}
 	],
