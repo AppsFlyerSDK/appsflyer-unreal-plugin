@@ -1,5 +1,16 @@
 # Release Notes
 
+### 6.17.9
+Release date **May 20, 2026**
+Release type: **Minor**
+
+**Overview and Highlights:**
+
+- **New API**: Added `logAdRevenue` method for logging ad revenue from mediation networks (Android and iOS)
+
+**New APIs:**
+- `logAdRevenue()` - Logs ad revenue events with mediation network, monetization network, currency, and revenue amount. Supports 14 mediation networks (GoogleAdMob, IronSource, ApplovinMax, Fyber, Appodeal, Admost, Topon, Tradplus, Yandex, ChartBoost, Unity, ToponPte, Custom, DirectMonetization)
+
 ### 6.17.8
 Release date **January 7, 2026**
 Release type: **Minor**
