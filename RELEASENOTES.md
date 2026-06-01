@@ -1,5 +1,14 @@
 # Release Notes
 
+### 6.18.0
+Release date **May 20, 2026**
+Release type: **Minor**
+
+**Overview and Highlights:**
+
+- **Version Update**: Updated iOS framework to v6.18.0, Android framework to v6.18.0
+- **Plugin Update**: Updated plugin to version 6.18.0 to match iOS framework version
+
 ### 6.17.9
 Release date **May 20, 2026**
 Release type: **Minor**
