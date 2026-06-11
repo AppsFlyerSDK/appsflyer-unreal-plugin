@@ -21,6 +21,7 @@ slug: ue-api
     - [Android Uninstall](#android-uninstall)
 - [Set Additional Data](#set-additional-data)
 - [Validate And Log In App Purchase](#validate-and-log-in-app-purchase)
+- [Log Ad Revenue](#log-ad-revenue)
 
 
 ## Configure
@@ -326,3 +327,51 @@ UAppsFlyerSDKBlueprint::ValidateAndLogInAppPurchase(PurchaseDetails, AdditionalD
 ```
 
 For more information about in-app purchase validation, see the [AppsFlyer documentation](https://dev.appsflyer.com/hc/docs/validate-in-app-purchases).
+
+## Log Ad Revenue
+
+The `logAdRevenue` method logs ad revenue from mediation networks to AppsFlyer with impression-level granularity. Call this API when an ad impression with revenue occurs.
+
+Supported on **Android** and **iOS**.
+
+For more information about ad revenue measurement, see the [AppsFlyer ad revenue documentation](https://dev.appsflyer.com/hc/docs/ad-revenue).
+
+### Parameters
+
+- **AdRevenueData** – A struct containing:
+  - `MonetizationNetwork` (FString) – The name of the monetization network (e.g. `"ironsource"`, `"facebook"`)
+  - `MediationNetwork` (EAFMediationNetwork) – The mediation network. Supported values: `GoogleAdMob`, `IronSource`, `ApplovinMax`, `Fyber`, `Appodeal`, `Admost`, `Topon`, `Tradplus`, `Yandex`, `ChartBoost`, `Unity`, `ToponPte`, `Custom`, `DirectMonetization`
+  - `CurrencyIso4217Code` (FString) – ISO 4217 currency code (e.g. `"USD"`)
+  - `EventRevenue` (double) – Revenue amount for the impression
+- **AdditionalParameters** – Optional map of key-value pairs for additional metadata (e.g. `country`, `ad_unit`, `ad_type`, `placement`)
+
+### Blueprint:
+
+<img src="https://files.readme.io/f0d88890839a552b5ed1c473fad319b0c8e6c9d3c0e9513831beaa20e93781f6-log_ad_revenue_ue_blueprint.png" width="1100"/>
+
+### C++
+
+```c++
+static void logAdRevenue(
+    const FAFAdRevenueData& AdRevenueData,
+    const TMap<FString, FString>& AdditionalParameters
+);
+```
+
+### Example Usage
+
+```c++
+FAFAdRevenueData AdRevenueData;
+AdRevenueData.MonetizationNetwork = TEXT("ironsource");
+AdRevenueData.MediationNetwork    = EAFMediationNetwork::IronSource;
+AdRevenueData.CurrencyIso4217Code = TEXT("USD");
+AdRevenueData.EventRevenue        = 0.01;
+
+TMap<FString, FString> AdRevenueParams;
+AdRevenueParams.Add(TEXT("country"),   TEXT("US"));
+AdRevenueParams.Add(TEXT("ad_unit"),   TEXT("test_ad_unit"));
+AdRevenueParams.Add(TEXT("ad_type"),   TEXT("banner"));
+AdRevenueParams.Add(TEXT("placement"), TEXT("main_menu"));
+
+UAppsFlyerSDKBlueprint::logAdRevenue(AdRevenueData, AdRevenueParams);
+```
